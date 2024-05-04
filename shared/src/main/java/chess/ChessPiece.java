@@ -77,6 +77,9 @@ public class ChessPiece {
         else if(getPieceType() == PieceType.KNIGHT){
             calc = new KnightMovesCalculator();
         }
+        else if(getPieceType() == PieceType.PAWN){
+            calc = new PawnMovesCalculator();
+        }
         else if(calc == null) {
             return new ArrayList<>();
         }
