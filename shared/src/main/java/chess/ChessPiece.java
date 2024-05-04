@@ -67,11 +67,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovesCalculator calc;
+        PieceMovesCalculator calc = null;
         if(getPieceType() == PieceType.BISHOP){
             calc = new BishopMovesCalculator();
-            return calc.pieceMoves(board, myPosition);
         }
-        return new ArrayList<>();
+        else if(getPieceType() == PieceType.KING){
+            calc = new KingMovesCalculator();
+        }
+        else if(calc == null) {
+            return new ArrayList<>();
+        }
+        return calc.pieceMoves(board, myPosition);
     }
 }
