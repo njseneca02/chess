@@ -80,7 +80,13 @@ public class ChessPiece {
         else if(getPieceType() == PieceType.PAWN){
             calc = new PawnMovesCalculator();
         }
-        else if(calc == null) {
+        else if(getPieceType() == PieceType.QUEEN){
+            calc = new QueenMovesCalculator();
+        }
+        else if(getPieceType() == PieceType.ROOK){
+            calc = new RookMovesCalculator();
+        }
+        else {
             return new ArrayList<>();
         }
         return calc.pieceMoves(board, myPosition);
