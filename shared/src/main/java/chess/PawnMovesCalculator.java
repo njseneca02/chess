@@ -7,11 +7,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> result = new ArrayList<ChessMove>();
         ChessGame.TeamColor myTeamColor = board.getPiece(myPosition).getTeamColor();
+        //moves needed for a white pawn piece
         if(myTeamColor == ChessGame.TeamColor.WHITE) {
             if (myPosition.chgPosition(1, 0).inBounds()) {
                 ChessPosition moveTo = myPosition.chgPosition(1, 0);
                 ChessPiece targetDest = board.getPiece(moveTo);
+                //in the case that no piece in the way of the pawn
                 if (targetDest == null) {
+                    //in the case that the pawn reaches the end of the board and needs promotion
                     if(moveTo.getRow() == 8){
                         ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
                         ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
@@ -26,6 +29,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                         ChessMove add = new ChessMove(myPosition, moveTo, null);
                         result.add(add);
                     }
+                    //in the case that the pawn starts in starting position
                     if(myPosition.getRow() == 2){
                         if (myPosition.chgPosition(2, 0).inBounds()) {
                             ChessPosition moveTo2 = myPosition.chgPosition(2, 0);
@@ -38,12 +42,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                     }
                 }
             }
-
+            //loop allows the pawn to check if there is an enemy piece in the proper place to capture.
             for (int i = -1; i <= 1; i += 2) {
                 if (myPosition.chgPosition(1, i).inBounds()) {
                     ChessPosition moveTo = myPosition.chgPosition(1, i);
                     ChessPiece targetDest = board.getPiece(moveTo);
+                    //in the case that the pawn is able to capture a piece
                     if (targetDest != null && targetDest.getTeamColor() != myTeamColor) {
+                        //in the case that the pawn reaches the end of the board and needs promotion
                         if(moveTo.getRow() == 8){
                             ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
                             ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
@@ -62,11 +68,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 }
             }
         }
+        //gets move for a pawn on the black team
         if(myTeamColor == ChessGame.TeamColor.BLACK) {
             if (myPosition.chgPosition(-1, 0).inBounds()) {
                 ChessPosition moveTo = myPosition.chgPosition(-1, 0);
                 ChessPiece targetDest = board.getPiece(moveTo);
+                //in the case that there is no piece in the way
                 if (targetDest == null) {
+                    //in the case that the pawn needs a promotion after moving
                     if(moveTo.getRow() == 1){
                         ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
                         ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
@@ -81,6 +90,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                         ChessMove add = new ChessMove(myPosition, moveTo, null);
                         result.add(add);
                     }
+                    //in the case that the pawn is at starting position
                     if(myPosition.getRow() == 7){
                         if (myPosition.chgPosition(-2, 0).inBounds()) {
                             ChessPosition moveTo2 = myPosition.chgPosition(-2, 0);
@@ -93,12 +103,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                     }
                 }
             }
-
+            //loop used to determine if pawn can move to capture
             for (int i = -1; i <= 1; i += 2) {
                 if (myPosition.chgPosition(-1, i).inBounds()) {
                     ChessPosition moveTo = myPosition.chgPosition(-1, i);
                     ChessPiece targetDest = board.getPiece(moveTo);
+                    //checks to make sure there is an enemy piece
                     if (targetDest != null && targetDest.getTeamColor() != myTeamColor) {
+                        //in the case that the pawn needs promotion after capturing
                         if(moveTo.getRow() == 1){
                             ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
                             ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
