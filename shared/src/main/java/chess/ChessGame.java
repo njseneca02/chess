@@ -92,7 +92,7 @@ public class ChessGame {
         for(ChessMove danger : temp){
             ChessPosition opponentPosition = danger.getEndPosition();
             ChessPiece opponent = board.getPiece(opponentPosition);
-            if(opponent.getPieceType() == ChessPiece.PieceType.KING && opponent.getTeamColor() != teamColor){
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.KING && opponent.getTeamColor() != teamColor){
                 return true;
             }
         }
@@ -102,7 +102,7 @@ public class ChessGame {
         for(ChessMove danger : temp){
             ChessPosition opponentPosition = danger.getEndPosition();
             ChessPiece opponent = board.getPiece(opponentPosition);
-            if(opponent.getPieceType() == ChessPiece.PieceType.PAWN && opponent.getTeamColor() != teamColor){
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.PAWN && opponent.getTeamColor() != teamColor){
                 return true;
             }
         }
@@ -112,17 +112,37 @@ public class ChessGame {
         for(ChessMove danger : temp){
             ChessPosition opponentPosition = danger.getEndPosition();
             ChessPiece opponent = board.getPiece(opponentPosition);
-            if(opponent.getPieceType() == ChessPiece.PieceType.QUEEN && opponent.getTeamColor() != teamColor){
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.QUEEN && opponent.getTeamColor() != teamColor){
                 return true;
             }
         }
 
-        calc = new PawnMovesCalculator();
+        calc = new RookMovesCalculator();
         temp = calc.pieceMoves(board, kingPosition);
         for(ChessMove danger : temp){
             ChessPosition opponentPosition = danger.getEndPosition();
             ChessPiece opponent = board.getPiece(opponentPosition);
-            if(opponent.getPieceType() == ChessPiece.PieceType.PAWN && opponent.getTeamColor() != teamColor){
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.ROOK && opponent.getTeamColor() != teamColor){
+                return true;
+            }
+        }
+
+        calc = new BishopMovesCalculator();
+        temp = calc.pieceMoves(board, kingPosition);
+        for(ChessMove danger : temp){
+            ChessPosition opponentPosition = danger.getEndPosition();
+            ChessPiece opponent = board.getPiece(opponentPosition);
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.BISHOP && opponent.getTeamColor() != teamColor){
+                return true;
+            }
+        }
+
+        calc = new KnightMovesCalculator();
+        temp = calc.pieceMoves(board, kingPosition);
+        for(ChessMove danger : temp){
+            ChessPosition opponentPosition = danger.getEndPosition();
+            ChessPiece opponent = board.getPiece(opponentPosition);
+            if(opponent != null && opponent.getPieceType() == ChessPiece.PieceType.KNIGHT && opponent.getTeamColor() != teamColor){
                 return true;
             }
         }
