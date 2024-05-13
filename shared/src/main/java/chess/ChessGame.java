@@ -79,7 +79,6 @@ public class ChessGame {
 
         }
 
-
         return validMoves;
     }
 
@@ -90,14 +89,22 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-//        ChessPiece movingPiece = board.getPiece(move.getStartPosition());
-//        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) movingPiece.pieceMoves(board, move.getStartPosition());
-//        for(ChessMove temp : validMoves){
-//            if(temp == move){
-//                board.makeMove(move);
-//            }
-//        }
-        board.makeMove(move);
+        ChessPiece movingPiece = board.getPiece(move.getStartPosition());
+        if(movingPiece == null){
+            throw new InvalidMoveException();
+        }
+        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) movingPiece.pieceMoves(board, move.getStartPosition());
+        boolean moved = false;
+        for(ChessMove temp : validMoves){
+            if(move.equals(temp)){
+                board.makeMove(move);
+                moved = true;
+            }
+        }
+
+        if(!moved){
+            throw new InvalidMoveException();
+        }
     }
 
     /**
