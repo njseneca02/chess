@@ -64,7 +64,29 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if(piece.getPieceType() == ChessPiece.PieceType.KING){
+
+        }
+        else if(piece.getPieceType() == ChessPiece.PieceType.QUEEN){
+
+        }
+        else if(piece.getPieceType() == ChessPiece.PieceType.ROOK){
+
+        }
+        else if(piece.getPieceType() == ChessPiece.PieceType.KNIGHT){
+
+        }
+        else if(piece.getPieceType() == ChessPiece.PieceType.BISHOP){
+
+        }
+        else if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
+
+        }
+        else{
+            return null;
+        }
+        return null;
     }
 
     /**
@@ -158,7 +180,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        return isInCheck(teamColor) && isInStalemate(teamColor);
+        return isInCheck(teamColor);
     }
 
     /**
@@ -169,6 +191,9 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        if(!isInCheck(teamColor)){
+            return true;
+        }
         throw new RuntimeException("Not implemented");
     }
 
