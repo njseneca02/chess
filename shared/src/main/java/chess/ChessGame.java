@@ -93,10 +93,10 @@ public class ChessGame {
         if(movingPiece == null){
             throw new InvalidMoveException();
         }
-        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) movingPiece.pieceMoves(board, move.getStartPosition());
+        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(move.getStartPosition());
         boolean moved = false;
         for(ChessMove temp : validMoves){
-            if(move.equals(temp)){
+            if(temp.equals(move)){
                 board.makeMove(move);
                 moved = true;
             }
