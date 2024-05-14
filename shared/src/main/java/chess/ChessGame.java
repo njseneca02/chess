@@ -92,15 +92,23 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece movingPiece = board.getPiece(move.getStartPosition());
-        if(movingPiece == null){
+        if(movingPiece == null || !movingPiece.getTeamColor().equals(teamTurn)){
             throw new InvalidMoveException();
         }
+
         ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) validMoves(move.getStartPosition());
         boolean moved = false;
         for(ChessMove temp : validMoves){
             if(temp.equals(move)){
                 board.makeMove(move);
+                if(teamTurn == TeamColor.WHITE){
+                    setTeamTurn(TeamColor.BLACK);
+                }
+                else{
+                    setTeamTurn(TeamColor.WHITE);
+                }
                 moved = true;
+                break;
             }
         }
 
