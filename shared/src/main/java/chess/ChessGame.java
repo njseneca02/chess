@@ -17,6 +17,8 @@ public class ChessGame {
 
     public ChessGame() {
         board = new ChessBoard();
+        board.resetBoard();
+        teamTurn = TeamColor.WHITE;
     }
 
     /**
@@ -150,9 +152,20 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if(!isInCheck(teamColor)){
+            for(int i = 1; i <= 8; i++){
+                for(int k = 1; k <= 8; k++){
+                    ChessPosition itr = new ChessPosition(i,k);
+                    ArrayList<ChessMove> validmvs = (ArrayList<ChessMove>) validMoves(itr);
+                    if (validmvs != null && !validmvs.isEmpty()) {
+                        if(board.getPiece(itr).getTeamColor() == teamColor) {
+                            return false;
+                        }
+                    }
+                }
+            }
             return true;
         }
-        throw new RuntimeException("Not implemented");
+        return false;
     }
 
     /**
