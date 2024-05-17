@@ -102,9 +102,32 @@ public class ChessGame {
             if(temp.equals(move)){
                 board.makeMove(move);
                 if(teamTurn == TeamColor.WHITE){
+//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.KING){
+//                        board.setWKmoved();
+//                    }
+//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.ROOK){
+//                        if(move.getStartPosition().getColumn() == 1){
+//                            board.setWLRmoved();
+//                        }
+//                        else{
+//                            board.setWRRmoved();
+//                        }
+//                    }
                     setTeamTurn(TeamColor.BLACK);
                 }
                 else{
+//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.KING){
+//                        board.setBKmoved();
+//                    }
+//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.ROOK){
+//                        if(move.getStartPosition().getColumn() == 1){
+//                            board.setBLRmoved();
+//                        }
+//                        else{
+//                            board.setBRRmoved();
+//                        }
+//
+//                    }
                     setTeamTurn(TeamColor.WHITE);
                 }
                 moved = true;

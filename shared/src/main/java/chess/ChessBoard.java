@@ -12,10 +12,73 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard implements Cloneable{
+
     private ChessPiece[][] chessBoard;
+//    private boolean WRRmoved;
+//    private boolean WLRmoved;
+//    private boolean WKmoved;
+//    private boolean BRRmoved;
+//    private boolean BLRmoved;
+//    private boolean BKmoved;
+
+
     public ChessBoard() {
          chessBoard = new ChessPiece[8][8];
+//         WRRmoved = false;
+//         WLRmoved = false;
+//         WKmoved = false;
+//         BRRmoved = false;
+//         BLRmoved = false;
+//         BKmoved = false;
     }
+
+//    public void setWRRmoved(){
+//        WRRmoved = true;
+//    }
+//
+//    public void setWLRmoved(){
+//        WLRmoved = true;
+//    }
+//
+//    public void setWKmoved(){
+//        WKmoved = true;
+//    }
+//
+//    public void setBRRmoved(){
+//        BRRmoved = true;
+//    }
+//
+//    public void setBLRmoved(){
+//        BLRmoved = true;
+//    }
+//
+//    public void setBKmoved(){
+//        BKmoved = true;
+//    }
+//
+//    public boolean getWRRmoved(){
+//        return WRRmoved;
+//    }
+//
+//    public boolean getWLRmoved(){
+//        return WLRmoved;
+//    }
+//
+//    public boolean getWKmoved(){
+//        return WKmoved;
+//    }
+//
+//    public boolean getBRRmoved(){
+//        return BRRmoved;
+//    }
+//
+//    public boolean getBLRmoved(){
+//        return BLRmoved;
+//    }
+//
+//    public boolean getBKmoved(){
+//        return BKmoved;
+//    }
 
     /**
      * Adds a chess piece to the chessboard
@@ -79,8 +142,36 @@ public class ChessBoard implements Cloneable{
             addPiece(move.getStartPosition(), null);
         }
         else{
-            addPiece(move.getEndPosition(), movingPiece);
-            addPiece(move.getStartPosition(), null);
+//            if(move.getStartPosition().getColumn() - move.getEndPosition().getColumn() == 2 && movingPiece.getPieceType() == ChessPiece.PieceType.KING) {
+//                if (movingPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+//                    addPiece(move.getEndPosition(), movingPiece);
+//                    addPiece(move.getStartPosition(), null);
+//                    addPiece(new ChessPosition(move.getEndPosition().getRow(), move.getEndPosition().getColumn() + 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+//                    addPiece(new ChessPosition(1, 1), null);
+//                }
+//                else {
+//                    addPiece(move.getEndPosition(), movingPiece);
+//                    addPiece(move.getStartPosition(), null);
+//                    addPiece(new ChessPosition(move.getEndPosition().getRow(), move.getEndPosition().getColumn() + 1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+//                    addPiece(new ChessPosition(8, 1), null);
+//                }
+//            }
+//            else if(move.getStartPosition().getColumn() - move.getEndPosition().getColumn() == -2 && movingPiece.getPieceType() == ChessPiece.PieceType.KING)
+//                    if(movingPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
+//                        addPiece(move.getEndPosition(), movingPiece);
+//                        addPiece(move.getStartPosition(), null);
+//                        addPiece(new ChessPosition(move.getEndPosition().getRow(), move.getEndPosition().getColumn() - 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+//                        addPiece(new ChessPosition(1,8), null);
+//                    }
+//                    else{
+//                        addPiece(move.getEndPosition(), movingPiece);
+//                        addPiece(move.getStartPosition(), null);
+//                        addPiece(new ChessPosition(move.getEndPosition().getRow(), move.getEndPosition().getColumn() - 1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+//                        addPiece(new ChessPosition(8,8), null);
+//                    }
+                addPiece(move.getEndPosition(), movingPiece);
+                addPiece(move.getStartPosition(), null);
+
         }
 
 
