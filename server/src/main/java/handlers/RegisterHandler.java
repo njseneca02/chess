@@ -14,7 +14,8 @@ public class RegisterHandler extends Handler{
     private AuthDAO authDAO;
     private UserDAO userDAO;
     public RegisterHandler(AuthDAO authDAO, UserDAO userDAO) {
-        super(authDAO, userDAO);
+        this.authDAO = authDAO;
+        this.userDAO = userDAO;
     }
 
     public String handleRequest(spark.Request req, spark.Response res){
@@ -27,15 +28,16 @@ public class RegisterHandler extends Handler{
         RegisterResult result;
         try {
             result = service.register(request);
-            if(result.message().contains("bad request")){
+            if(result.message() == null){
+                res.status(200);
+            }
+            else if(result.message().contains("bad request")){
                 res.status(400);
             }
             else if(result.message().contains("already taken")){
                 res.status(403);
             }
-            else{
-                res.status(200);
-            }
+
         }
         catch(DataAccessException e){
             res.status(500);
