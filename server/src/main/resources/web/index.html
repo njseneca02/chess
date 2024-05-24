@@ -62,7 +62,7 @@
         </td>
         <td>
             <span class="description">Lists all the games in the database</span> This API does not take a request body.
-            The response JSON lists all the games, including the board. An authToken is required to call this endpoint.
+            The request JSON lists all the games, including the board. An authToken is required to call this endpoint.
         </td>
     </tr>
     <tr>
@@ -72,7 +72,7 @@
         </td>
         <td>
             <span class="description">Create a new Chess Game</span> The request body must contain a name for the game.
-            The response JSON contains the ID of created game, or if failed, an error message describing the reason. An
+            The request JSON contains the ID of created game, or if failed, an error message describing the reason. An
             authToken is required to call this endpoint.
         </td>
     </tr>
@@ -99,7 +99,7 @@
 </table>
 <h2 id="execute">Execute</h2>
 <div class="box">
-    <h3>Request</h3>
+    <h3>result</h3>
     <div class="input"><label for="method">Method:</label> <input type="text" id="method"/></div>
 
     <div class="input">
@@ -111,13 +111,13 @@
     </div>
 
     <div class="input">
-        <label for="requestBox">Request Body:</label> <textarea id="requestBox" name="requestBox"></textarea>
+        <label for="requestBox">result Body:</label> <textarea id="requestBox" name="requestBox"></textarea>
     </div>
 
     <button onclick="submit()">Send</button>
 </div>
 <div class="box">
-    <h3>Response</h3>
+    <h3>request</h3>
     <pre id="response" readonly></pre>
 </div>
 </body>
