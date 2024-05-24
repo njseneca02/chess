@@ -1,9 +1,19 @@
 package server;
 
+import dataaccess.*;
 import handlers.RegisterHandler;
 import spark.*;
 
 public class Server {
+    private AuthDAO authDAO;
+    private GameDAO gameDAO;
+    private UserDAO userDAO;
+
+    public Server(){
+        this.authDAO = new MemoryAuthDAO();
+        this.gameDAO = new MemoryGameDAO();
+        this.userDAO = new MemoryUserDAO();
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -24,7 +34,7 @@ public class Server {
 
     public void registerEndpoints(){
         Spark.post("/user", (req, res) ->
-                        (new RegisterHandler()).handleRequest(req,res));
+                        (new RegisterHandler(authDAO, userDAO)).handleRequest(req,res));
 
         //Spark.get()
     }
