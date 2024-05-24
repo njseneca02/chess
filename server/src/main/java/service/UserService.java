@@ -5,17 +5,18 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
+import request.LoginRequest;
 import request.RegisterRequest;
+import result.LoginResult;
 import result.RegisterResult;
 
 import java.util.UUID;
 
-public class RegisterService {
+public class UserService {
 
     private AuthDAO authDAO;
     private UserDAO userDAO;
-    public RegisterService(AuthDAO authDAO, UserDAO userDAO){
+    public UserService(AuthDAO authDAO, UserDAO userDAO){
         this.authDAO = authDAO;
         this.userDAO = userDAO;
     }
@@ -34,6 +35,9 @@ public class RegisterService {
         authDAO.createAuth(newAuth);
         return new RegisterResult(null, newAuth.username(), newAuth.authToken());
 
+    }
 
+    public LoginResult login(LoginRequest request) throws DataAccessException {
+        return null;
     }
 }

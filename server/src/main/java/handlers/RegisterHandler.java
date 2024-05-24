@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
-import org.eclipse.jetty.server.Authentication;
 import request.RegisterRequest;
 import result.RegisterResult;
-import service.RegisterService;
+import service.UserService;
 
 public class RegisterHandler extends Handler{
 
@@ -24,7 +23,7 @@ public class RegisterHandler extends Handler{
 
         RegisterRequest request = (RegisterRequest)gson.fromJson(req.body(), RegisterRequest.class);
 
-        RegisterService service = new RegisterService(authDAO, userDAO);
+        UserService service = new UserService(authDAO, userDAO);
         RegisterResult result;
         try {
             result = service.register(request);
