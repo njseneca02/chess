@@ -1,10 +1,7 @@
 package server;
 
 import dataaccess.*;
-import handlers.ClearHandler;
-import handlers.LoginHandler;
-import handlers.LogoutHandler;
-import handlers.RegisterHandler;
+import handlers.*;
 import spark.*;
 
 public class Server {
@@ -47,5 +44,8 @@ public class Server {
 
         Spark.delete("/session", (req, res) ->
                 (new LogoutHandler(authDAO, userDAO).handleRequest(req, res)));
+
+        Spark.get("/game", (req, res) ->
+                (new ListGameHandler(authDAO, gameDAO).handleRequest(req, res)));
     }
 }
