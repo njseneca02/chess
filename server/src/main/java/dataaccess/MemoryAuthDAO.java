@@ -29,4 +29,8 @@ public class MemoryAuthDAO implements AuthDAO{
         authDatabase.remove(u);
     }
 
+    public void clear() throws DataAccessException{
+        authDatabase.clear();
+    }
+
 }

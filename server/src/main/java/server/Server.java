@@ -1,6 +1,7 @@
 package server;
 
 import dataaccess.*;
+import handlers.ClearHandler;
 import handlers.RegisterHandler;
 import spark.*;
 
@@ -36,6 +37,7 @@ public class Server {
         Spark.post("/user", (req, res) ->
                         (new RegisterHandler(authDAO, userDAO)).handleRequest(req,res));
 
-        //Spark.get()
+        Spark.delete("/db", (req, res) ->
+                (new ClearHandler(authDAO, gameDAO, userDAO).handleRequest(req, res)));
     }
 }

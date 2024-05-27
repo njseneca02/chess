@@ -14,4 +14,6 @@ public interface GameDAO {
     public Collection<GameData> listGames() throws DataAccessException;
 
     public void updateGame(int ID, ChessGame chessGame) throws DataAccessException;
+
+    public void clear() throws DataAccessException;
 }

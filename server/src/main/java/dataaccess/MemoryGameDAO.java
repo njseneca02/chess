@@ -29,4 +29,8 @@ public class MemoryGameDAO implements GameDAO{
         GameData newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), chessGame);
         database.replace(ID, oldGame, newGame);
     }
+
+    public void clear() throws DataAccessException{
+        database.clear();
+    }
 }
