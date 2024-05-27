@@ -5,6 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
+import result.NoBodyResult;
 import result.RegisterResult;
 import service.UtilService;
 
@@ -25,16 +26,16 @@ public class ClearHandler {
         var gson = new Gson();
 
         UtilService service = new UtilService(authDAO, gameDAO, userDAO);
-        RegisterResult result;
+        NoBodyResult result;
 
         try{
             service.clearDatabase();
             res.status(200);
-            result = new RegisterResult(null, null, null);
+            result = new NoBodyResult(null);
         }
         catch(DataAccessException e){
             res.status(500);
-            result = new RegisterResult("Error: " + e.getMessage(), null, null);
+            result = new NoBodyResult("Error: " + e.getMessage());
         }
         return gson.toJson(result);
     }
