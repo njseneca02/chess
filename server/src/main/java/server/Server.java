@@ -3,6 +3,7 @@ package server;
 import dataaccess.*;
 import handlers.ClearHandler;
 import handlers.LoginHandler;
+import handlers.LogoutHandler;
 import handlers.RegisterHandler;
 import spark.*;
 
@@ -43,5 +44,8 @@ public class Server {
 
         Spark.post("/session", (req, res) ->
                 (new LoginHandler(authDAO, userDAO).handleRequest(req, res)));
+
+        Spark.delete("/session", (req, res) ->
+                (new LogoutHandler(authDAO, userDAO).handleRequest(req, res)));
     }
 }

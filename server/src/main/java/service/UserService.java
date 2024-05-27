@@ -8,6 +8,7 @@ import model.UserData;
 import request.LoginRequest;
 import request.RegisterRequest;
 import result.LoginResult;
+import result.NoBodyResult;
 import result.RegisterResult;
 
 import java.util.UUID;
@@ -49,6 +50,25 @@ public class UserService {
         }
         else{
             result = new LoginResult("Error: unauthorized", null, null);
+        }
+        return result;
+    }
+
+    public NoBodyResult logout(String authToken) throws DataAccessException{
+
+        if(authToken == null){
+            return new NoBodyResult("Error: unauthorized");
+        }
+
+        NoBodyResult result;
+
+        AuthData auth = authDAO.getAuth(authToken);
+        if(auth != null){
+            authDAO.deleteAuth(auth);
+            result = new NoBodyResult(null);
+        }
+        else{
+            result = new NoBodyResult("Error: unauthorized");
         }
         return result;
     }
