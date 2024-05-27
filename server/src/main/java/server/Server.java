@@ -47,5 +47,8 @@ public class Server {
 
         Spark.get("/game", (req, res) ->
                 (new ListGameHandler(authDAO, gameDAO).handleRequest(req, res)));
+
+        Spark.post("/game", (req, res) ->
+                (new CreateGameHandler(authDAO, gameDAO).handleRequest(req, res)));
     }
 }

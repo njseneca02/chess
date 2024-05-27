@@ -16,4 +16,6 @@ public interface GameDAO {
     public void updateGame(int ID, ChessGame chessGame) throws DataAccessException;
 
     public void clear() throws DataAccessException;
+
+    public int getIDCounter();
 }

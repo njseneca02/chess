@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
     private HashMap<Integer, GameData> database;
+    private int IDCounter = 1;
     public MemoryGameDAO(){
         this.database = new HashMap<Integer, GameData>();
     }
@@ -28,6 +29,11 @@ public class MemoryGameDAO implements GameDAO{
         GameData oldGame = database.get(ID);
         GameData newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), chessGame);
         database.replace(ID, oldGame, newGame);
+    }
+
+    public int getIDCounter(){
+        IDCounter++;
+        return IDCounter - 1;
     }
 
     public void clear() throws DataAccessException{
