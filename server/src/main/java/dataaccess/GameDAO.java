@@ -3,8 +3,8 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
+import java.util.HashMap;
 
 public interface GameDAO {
     public void createGame(GameData g) throws DataAccessException;
@@ -20,4 +20,6 @@ public interface GameDAO {
     public int getIDCounter();
 
     public void updatePlayer(int ID, String username, ChessGame.TeamColor color) throws DataAccessException;
+
+    public HashMap<Integer, GameData> getDatabase();
 }

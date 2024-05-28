@@ -2,7 +2,7 @@ package dataaccess;
 
 import model.UserData;
 
-import javax.xml.crypto.Data;
+import java.util.Collection;
 
 public interface UserDAO {
 
@@ -11,5 +11,7 @@ public interface UserDAO {
     public UserData getUser(String username) throws DataAccessException;
 
     public void clear() throws DataAccessException;
+
+    public Collection<UserData> getDatabase();
 
 }

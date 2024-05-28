@@ -3,6 +3,7 @@ package dataaccess;
 import model.AuthData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class MemoryAuthDAO implements AuthDAO{
 
@@ -31,6 +32,10 @@ public class MemoryAuthDAO implements AuthDAO{
 
     public void clear() throws DataAccessException{
         authDatabase.clear();
+    }
+
+    public Collection<AuthData> getDatabase(){
+        return authDatabase;
     }
 
 }

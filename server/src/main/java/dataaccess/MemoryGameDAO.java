@@ -52,4 +52,8 @@ public class MemoryGameDAO implements GameDAO{
     public void clear() throws DataAccessException{
         database.clear();
     }
+
+    public HashMap<Integer, GameData> getDatabase(){
+        return database;
+    }
 }
