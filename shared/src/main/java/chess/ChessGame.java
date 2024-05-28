@@ -135,18 +135,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if(isInCheck(teamColor)){
-            for(int i = 1; i <= 8; i++){
-                for(int k = 1; k <= 8; k++){
-                    ChessPosition itr = new ChessPosition(i,k);
-                    ArrayList<ChessMove> validmvs = (ArrayList<ChessMove>) validMoves(itr);
-                        if (validmvs != null && !validmvs.isEmpty()) {
-                            if(board.getPiece(itr).getTeamColor() == teamColor) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
+            cycleBoardPositions(teamColor);
         }
         return false;
     }
@@ -160,18 +149,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if(!isInCheck(teamColor)){
-            for(int i = 1; i <= 8; i++){
-                for(int k = 1; k <= 8; k++){
-                    ChessPosition itr = new ChessPosition(i,k);
-                    ArrayList<ChessMove> validmvs = (ArrayList<ChessMove>) validMoves(itr);
-                    if (validmvs != null && !validmvs.isEmpty()) {
-                        if(board.getPiece(itr).getTeamColor() == teamColor) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
+            cycleBoardPositions(teamColor);
         }
         return false;
     }
@@ -192,6 +170,21 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    public boolean cycleBoardPositions(TeamColor teamColor){
+        for(int i = 1; i <= 8; i++){
+            for(int k = 1; k <= 8; k++){
+                ChessPosition itr = new ChessPosition(i,k);
+                ArrayList<ChessMove> validmvs = (ArrayList<ChessMove>) validMoves(itr);
+                if (validmvs != null && !validmvs.isEmpty()) {
+                    if(board.getPiece(itr).getTeamColor() == teamColor) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 }
