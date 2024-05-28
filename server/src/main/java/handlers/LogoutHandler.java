@@ -5,7 +5,6 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import result.NoBodyResult;
-import result.RegisterResult;
 import service.UserService;
 
 public class LogoutHandler {
@@ -39,6 +38,7 @@ public class LogoutHandler {
             res.status(500);
             result = new NoBodyResult("Error: " + e.getMessage());
         }
+
         return gson.toJson(result);
     }
 }

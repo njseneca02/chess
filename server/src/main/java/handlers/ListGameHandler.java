@@ -4,11 +4,8 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
-import dataaccess.UserDAO;
 import result.ListGameResult;
-import result.NoBodyResult;
 import service.GameService;
-import service.UserService;
 
 public class ListGameHandler {
 
@@ -41,6 +38,7 @@ public class ListGameHandler {
             res.status(500);
             result = new ListGameResult("Error: " + e.getMessage(), null);
         }
+
         return gson.toJson(result);
     }
 }

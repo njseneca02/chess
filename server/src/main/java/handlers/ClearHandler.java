@@ -6,7 +6,6 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import result.NoBodyResult;
-import result.RegisterResult;
 import service.UtilService;
 
 public class ClearHandler {

@@ -5,9 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import request.LoginRequest;
-import request.RegisterRequest;
 import result.LoginResult;
-import result.RegisterResult;
 import service.UserService;
 
 public class LoginHandler {
@@ -27,6 +25,7 @@ public class LoginHandler {
 
         UserService service = new UserService(authDAO, userDAO);
         LoginResult result;
+
         try{
             result = service.login(request);
             if(result.message() != null && result.message().contains("Error: unauthorized")){
@@ -40,6 +39,7 @@ public class LoginHandler {
             res.status(500);
             result = new LoginResult("Error: " + e.getMessage(), null, null);
         }
+
         return gson.toJson(result);
 
     }

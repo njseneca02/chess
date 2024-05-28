@@ -8,7 +8,7 @@ import request.RegisterRequest;
 import result.RegisterResult;
 import service.UserService;
 
-public class RegisterHandler extends Handler{
+public class RegisterHandler{
 
     private AuthDAO authDAO;
     private UserDAO userDAO;
@@ -25,6 +25,7 @@ public class RegisterHandler extends Handler{
 
         UserService service = new UserService(authDAO, userDAO);
         RegisterResult result;
+
         try {
             result = service.register(request);
             if(result.message() == null){
@@ -42,6 +43,7 @@ public class RegisterHandler extends Handler{
             res.status(500);
             result = new RegisterResult("Error: " + e.getMessage(), null, null);
         }
+
         return gson.toJson(result);
 
     }

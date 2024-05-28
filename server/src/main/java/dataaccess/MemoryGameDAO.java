@@ -7,8 +7,10 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
+
     private HashMap<Integer, GameData> database;
     private int IDCounter = 1;
+
     public MemoryGameDAO(){
         this.database = new HashMap<Integer, GameData>();
     }

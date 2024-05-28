@@ -102,32 +102,9 @@ public class ChessGame {
             if(temp.equals(move)){
                 board.makeMove(move);
                 if(teamTurn == TeamColor.WHITE){
-//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.KING){
-//                        board.setWKmoved();
-//                    }
-//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.ROOK){
-//                        if(move.getStartPosition().getColumn() == 1){
-//                            board.setWLRmoved();
-//                        }
-//                        else{
-//                            board.setWRRmoved();
-//                        }
-//                    }
                     setTeamTurn(TeamColor.BLACK);
                 }
                 else{
-//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.KING){
-//                        board.setBKmoved();
-//                    }
-//                    if(movingPiece.getPieceType() == ChessPiece.PieceType.ROOK){
-//                        if(move.getStartPosition().getColumn() == 1){
-//                            board.setBLRmoved();
-//                        }
-//                        else{
-//                            board.setBRRmoved();
-//                        }
-//
-//                    }
                     setTeamTurn(TeamColor.WHITE);
                 }
                 moved = true;
@@ -217,16 +194,4 @@ public class ChessGame {
         return board;
     }
 
-//    public ChessPosition getKingPosition(TeamColor teamColor){
-//        for(int i = 1; i <= 8; i++){
-//            for(int j = 1; j <= 8; j++){
-//                ChessPosition temp = new ChessPosition(i,j);
-//                ChessPiece result = board.getPiece(temp);
-//                if(result != null && result.getPieceType() == ChessPiece.PieceType.KING && result.getTeamColor() == teamColor){
-//                    return temp;
-//                }
-//            }
-//        }
-//        return null;
-//    }
 }

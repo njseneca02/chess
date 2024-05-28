@@ -11,7 +11,6 @@ import request.JoinGameRequest;
 import result.CreateGameResult;
 import result.ListGameResult;
 import result.NoBodyResult;
-import result.RegisterResult;
 
 public class GameService {
 

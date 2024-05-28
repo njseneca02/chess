@@ -6,7 +6,6 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import request.CreateGameRequest;
 import result.CreateGameResult;
-import result.RegisterResult;
 import service.GameService;
 
 public class CreateGameHandler {
@@ -28,6 +27,7 @@ public class CreateGameHandler {
 
         GameService service = new GameService(authDAO, gameDAO);
         CreateGameResult result;
+
         try {
             result = service.createGame(request, authToken);
             if(result.message() == null){
@@ -39,12 +39,12 @@ public class CreateGameHandler {
             else if(result.message().contains("unauthorized")){
                 res.status(401);
             }
-
         }
         catch(DataAccessException e){
             res.status(500);
             result = new CreateGameResult("Error: " + e.getMessage(), null);
         }
+
         return gson.toJson(result);
     }
 }
