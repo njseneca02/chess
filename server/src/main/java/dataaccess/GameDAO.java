@@ -18,4 +18,6 @@ public interface GameDAO {
     public void clear() throws DataAccessException;
 
     public int getIDCounter();
+
+    public void updatePlayer(int ID, String username, ChessGame.TeamColor color) throws DataAccessException;
 }

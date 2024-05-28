@@ -25,10 +25,23 @@ public class MemoryGameDAO implements GameDAO{
         return database.values();
     }
 
-    public void updateGame(int ID, ChessGame chessGame) throws DataAccessException{
+    public void updateGame(int ID, ChessGame game) throws DataAccessException{
         GameData oldGame = database.get(ID);
-        GameData newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), chessGame);
+        GameData newGame = new GameData(ID, oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), game);
         database.replace(ID, oldGame, newGame);
+    }
+
+    public void updatePlayer(int ID, String username, ChessGame.TeamColor color) throws DataAccessException{
+        GameData oldGame = database.get(ID);
+        GameData newGame;
+        if(color == ChessGame.TeamColor.WHITE){
+            newGame = new GameData(ID, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+        }
+        else{
+            newGame = new GameData(ID, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
+        }
+        database.replace(ID, oldGame, newGame);
+
     }
 
     public int getIDCounter(){

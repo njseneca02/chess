@@ -7,9 +7,11 @@ import dataaccess.GameDAO;
 import model.AuthData;
 import model.GameData;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import result.CreateGameResult;
 import result.ListGameResult;
 import result.NoBodyResult;
+import result.RegisterResult;
 
 public class GameService {
 
@@ -58,6 +60,43 @@ public class GameService {
 
         else{
             result = new CreateGameResult("Error: unauthorized", null);
+        }
+        return result;
+    }
+
+    public NoBodyResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException{
+        if(authToken == null){
+            return new NoBodyResult("Error: unauthorized");
+        }
+
+        NoBodyResult result;
+        AuthData auth = authDAO.getAuth(authToken);
+
+        if(request.playerColor() == null || request.gameID() == null){
+            result = new NoBodyResult("Error: bad request");
+        }
+
+        else if(auth != null){
+            GameData game = gameDAO.getGame(Integer.parseInt(request.gameID()));
+            if(game != null){
+                if(request.playerColor() == ChessGame.TeamColor.BLACK && game.blackUsername() != null) {
+                        result = new NoBodyResult("Error: already taken");
+                }
+                else if(request.playerColor() == ChessGame.TeamColor.WHITE && game.whiteUsername() != null){
+                        result = new NoBodyResult("Error: already taken");
+                }
+                else{
+                    gameDAO.updatePlayer(Integer.parseInt(request.gameID()), authDAO.getAuth(authToken).username(), request.playerColor());
+                    result = new NoBodyResult(null);
+                }
+            }
+            else{
+                result = new NoBodyResult("Error: bad request");
+            }
+        }
+
+        else{
+            result = new NoBodyResult("Error: unauthorized");
         }
         return result;
     }
