@@ -16,14 +16,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if (targetDest == null) {
                     //in the case that the pawn reaches the end of the board and needs promotion
                     if(moveTo.getRow() == 8){
-                        ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
-                        ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
-                        ChessMove addK = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.KNIGHT);
-                        ChessMove addR = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.ROOK);
-                        result.add(addQ);
-                        result.add(addB);
-                        result.add(addK);
-                        result.add(addR);
+                        moveAddHelper(result, myPosition, moveTo);
                     }
                     else {
                         ChessMove add = new ChessMove(myPosition, moveTo, null);
@@ -51,14 +44,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                     if (targetDest != null && targetDest.getTeamColor() != myTeamColor) {
                         //in the case that the pawn reaches the end of the board and needs promotion
                         if(moveTo.getRow() == 8){
-                            ChessMove addQn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
-                            ChessMove addBn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
-                            ChessMove addKn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.KNIGHT);
-                            ChessMove addRn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.ROOK);
-                            result.add(addQn);
-                            result.add(addBn);
-                            result.add(addKn);
-                            result.add(addRn);
+                            moveAddHelper(result, myPosition, moveTo);
                         }
                         else {
                             ChessMove add = new ChessMove(myPosition, moveTo, null);
@@ -77,14 +63,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                 if (targetDest == null) {
                     //in the case that the pawn needs a promotion after moving
                     if(moveTo.getRow() == 1){
-                        ChessMove addQ = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
-                        ChessMove addB = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
-                        ChessMove addK = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.KNIGHT);
-                        ChessMove addR = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.ROOK);
-                        result.add(addQ);
-                        result.add(addB);
-                        result.add(addK);
-                        result.add(addR);
+                        moveAddHelper(result, myPosition, moveTo);
                     }
                     else {
                         ChessMove add = new ChessMove(myPosition, moveTo, null);
@@ -112,14 +91,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
                     if (targetDest != null && targetDest.getTeamColor() != myTeamColor) {
                         //in the case that the pawn needs promotion after capturing
                         if(moveTo.getRow() == 1){
-                            ChessMove addQn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
-                            ChessMove addBn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
-                            ChessMove addKn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.KNIGHT);
-                            ChessMove addRn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.ROOK);
-                            result.add(addQn);
-                            result.add(addBn);
-                            result.add(addKn);
-                            result.add(addRn);
+                            moveAddHelper(result, myPosition, moveTo);
                         }
                         else {
                             ChessMove add = new ChessMove(myPosition, moveTo, null);
@@ -131,6 +103,16 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
         }
         return result;
 
+    }
+    public void moveAddHelper(ArrayList<ChessMove> result, ChessPosition myPosition, ChessPosition moveTo) {
+        ChessMove addQn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.QUEEN);
+        ChessMove addBn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.BISHOP);
+        ChessMove addKn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.KNIGHT);
+        ChessMove addRn = new ChessMove(myPosition, moveTo, ChessPiece.PieceType.ROOK);
+        result.add(addQn);
+        result.add(addBn);
+        result.add(addKn);
+        result.add(addRn);
     }
 
 

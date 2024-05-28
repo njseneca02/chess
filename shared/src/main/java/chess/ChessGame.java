@@ -135,7 +135,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if(isInCheck(teamColor)){
-            cycleBoardPositions(teamColor);
+            return cycleBoardPositions(teamColor);
         }
         return false;
     }
@@ -149,7 +149,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if(!isInCheck(teamColor)){
-            cycleBoardPositions(teamColor);
+            return cycleBoardPositions(teamColor);
         }
         return false;
     }
