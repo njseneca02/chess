@@ -8,6 +8,12 @@ import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import request.LoginRequest;
+import request.RegisterRequest;
+import result.LoginResult;
+import result.NoBodyResult;
+import result.RegisterResult;
+
 
 public class ServiceUnitTests {
 
@@ -49,32 +55,103 @@ public class ServiceUnitTests {
 
     @Test
     public void testRegisterSuccess(){
+        UserData actual;
+        try {
 
+            RegisterRequest request = new RegisterRequest("username", "password", "email");
+            userService.register(request);
+            actual = userDAO.getUser("username");
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            actual = null;
+        }
+        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
+        Assertions.assertEquals(new UserData("username", "password", "email"), actual);
+        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
     }
 
     @Test
     public void testRegisterFail(){
+        try {
 
+            RegisterRequest request = new RegisterRequest("username", "password", null);
+            userService.register(request);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(userDAO.getDatabase().isEmpty());
+        Assertions.assertTrue(authDAO.getDatabase().isEmpty());
     }
 
     @Test
     public void testLoginSuccess(){
+        LoginResult result;
+        try {
+
+            RegisterRequest request = new RegisterRequest("username", "password", "email");
+            userService.register(request);
+            LoginRequest loginRequest = new LoginRequest("username", "password");
+            result = userService.login(loginRequest);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            result = null;
+        }
+        Assertions.assertEquals(result.username(), "username");
+        Assertions.assertTrue(authDAO.getDatabase().size() == 2);
 
     }
 
     @Test
     public void testLoginFail(){
+        LoginResult result;
+        try {
 
+            RegisterRequest request = new RegisterRequest("username", "password", "email");
+            userService.register(request);
+            LoginRequest loginRequest = new LoginRequest("username", "pass");
+            result = userService.login(loginRequest);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            result = null;
+        }
+        Assertions.assertEquals(result.username(), null);
+        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
     }
 
     @Test
     public void testLogoutSuccess(){
-
+        try {
+            RegisterRequest request = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(request);
+            String authToken = result.authToken();
+            userService.logout(authToken);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(authDAO.getDatabase().isEmpty());
     }
 
     @Test
     public void testLogoutFail(){
-
+        NoBodyResult result;
+        try {
+            RegisterRequest request = new RegisterRequest("username", "password", "email");
+            userService.register(request);
+            result = userService.logout("1234");
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            result = null;
+        }
+        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(result.message().contains("unauthorized"));
     }
 
     @Test
