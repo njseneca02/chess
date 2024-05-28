@@ -8,8 +8,11 @@ import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
+import result.ListGameResult;
 import result.LoginResult;
 import result.NoBodyResult;
 import result.RegisterResult;
@@ -156,31 +159,129 @@ public class ServiceUnitTests {
 
     @Test
     public void testListGamesSuccess(){
-
+        ListGameResult listResult;
+        try {
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+            String authToken = result.authToken();
+            CreateGameRequest request = new CreateGameRequest("gameName");
+            gameService.createGame(request, authToken);
+            listResult = gameService.listGames(authToken);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            listResult = null;
+        }
+        Assertions.assertTrue(listResult.games().size() == 1);
+        Assertions.assertTrue(listResult != null);
     }
+
 
     @Test
     public void testListGamesFail(){
-
+        ListGameResult listResult;
+        try {
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+            String authToken = result.authToken();
+            CreateGameRequest request = new CreateGameRequest("gameName");
+            gameService.createGame(request, authToken);
+            listResult = gameService.listGames("1234");
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            listResult = null;
+        }
+        Assertions.assertEquals(null, listResult.games());
+        Assertions.assertTrue(listResult.message().contains("unauthorized"));
     }
 
     @Test
     public void testCreateGameSuccess(){
-
+        GameData game;
+        try {
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+            String authToken = result.authToken();
+            CreateGameRequest request = new CreateGameRequest("gameName");
+            gameService.createGame(request, authToken);
+            game = gameDAO.getGame(1);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            game = null;
+        }
+        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(game != null);
+        Assertions.assertEquals("gameName", game.gameName());
     }
 
     @Test
     public void testCreateGameFail(){
-
+        try {
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+            String authToken = result.authToken();
+            CreateGameRequest request = new CreateGameRequest(null);
+            gameService.createGame(request, authToken);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(gameDAO.getDatabase().isEmpty());
     }
 
     @Test
     public void testJoinGameSuccess(){
+        GameData game;
+        try {
 
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+
+            String authToken = result.authToken();
+            CreateGameRequest request = new CreateGameRequest("gameName");
+            gameService.createGame(request, authToken);
+
+            JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
+            gameService.joinGame(joinRequest, authToken);
+            game = gameDAO.getGame(1);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            game = null;
+        }
+        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(game != null);
+        Assertions.assertEquals("username", game.whiteUsername());
     }
 
     @Test
     public void testJoinGameFail(){
+        GameData game;
+        try {
 
+            RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+            RegisterResult result = userService.register(registerRequest);
+            String authToken = result.authToken();
+
+            String authToken2 = userService.register(new RegisterRequest("imposter", "password", "email")).authToken();
+
+            CreateGameRequest request = new CreateGameRequest("gameName");
+            gameService.createGame(request, authToken);
+
+            JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
+            JoinGameRequest joinRequest2 = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
+            gameService.joinGame(joinRequest, authToken);
+            gameService.joinGame(joinRequest2, authToken2);
+            game = gameDAO.getGame(1);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+            game = null;
+        }
+        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(game != null);
+        Assertions.assertEquals("username", game.whiteUsername());
     }
 }
