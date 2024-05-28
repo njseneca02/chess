@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class MemoryGameDAO implements GameDAO{
 
     private HashMap<Integer, GameData> database;
-    private int IDCounter = 1;
+    private int idCounter = 1;
 
     public MemoryGameDAO(){
         this.database = new HashMap<Integer, GameData>();
@@ -47,8 +47,8 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     public int getIDCounter(){
-        IDCounter++;
-        return IDCounter - 1;
+        idCounter++;
+        return idCounter - 1;
     }
 
     public void clear() throws DataAccessException{
