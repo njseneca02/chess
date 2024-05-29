@@ -19,18 +19,12 @@ public class MemoryGameDAO implements GameDAO{
         database.put(g.gameID(), g);
     }
 
-    public GameData getGame(int ID) throws DataAccessException{
-        return database.get(ID);
+    public GameData getGame(int id) throws DataAccessException{
+        return database.get(id);
     }
 
     public Collection<GameData> listGames() throws DataAccessException{
         return database.values();
-    }
-
-    public void updateGame(int id, ChessGame game) throws DataAccessException{
-        GameData oldGame = database.get(id);
-        GameData newGame = new GameData(id, oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), game);
-        database.replace(id, oldGame, newGame);
     }
 
     public void updatePlayer(int id, String username, ChessGame.TeamColor color) throws DataAccessException{

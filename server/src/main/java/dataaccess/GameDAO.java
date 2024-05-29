@@ -13,8 +13,6 @@ public interface GameDAO {
 
     public Collection<GameData> listGames() throws DataAccessException;
 
-    public void updateGame(int id, ChessGame chessGame) throws DataAccessException;
-
     public void clear() throws DataAccessException;
 
     public int getIDCounter();

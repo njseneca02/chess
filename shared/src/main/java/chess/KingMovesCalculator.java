@@ -32,65 +32,28 @@ public class KingMovesCalculator implements PieceMovesCalculator{
 
         }
         //adds up right
-        if(myPosition.chgPosition(i,i).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(i,i);
-            ChessPiece targetDest = board.getPiece(moveTo);
-            if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
-                ChessMove add = new ChessMove(myPosition, moveTo, null);
-                result.add(add);
-            }
-
-        }
+        addMoveHelper(result, i, i, myPosition, board, myTeamColor);
         //adds down left
-        if(myPosition.chgPosition(j,j).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(j,j);
-            ChessPiece targetDest = board.getPiece(moveTo);
-            if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
-                ChessMove add = new ChessMove(myPosition, moveTo, null);
-                result.add(add);
-            }
-
-        }
+        addMoveHelper(result, j, j, myPosition, board, myTeamColor);
         //adds down
-        if(myPosition.chgPosition(j,k).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(j,k);
-            ChessPiece targetDest = board.getPiece(moveTo);
-            if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
-                ChessMove add = new ChessMove(myPosition, moveTo, null);
-                result.add(add);
-            }
-
-        }
+        addMoveHelper(result, j, k, myPosition, board, myTeamColor);
         //adds down right
-        if(myPosition.chgPosition(j,i).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(j,i);
-            ChessPiece targetDest = board.getPiece(moveTo);
-            if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
-                ChessMove add = new ChessMove(myPosition, moveTo, null);
-                result.add(add);
-            }
-
-        }
+        addMoveHelper(result, j, i, myPosition, board, myTeamColor);
         //adds left
-        if(myPosition.chgPosition(k,j).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(k,j);
-            ChessPiece targetDest = board.getPiece(moveTo);
-            if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
-                ChessMove add = new ChessMove(myPosition, moveTo, null);
-                result.add(add);
-            }
-
-        }
+        addMoveHelper(result, k, j, myPosition, board, myTeamColor);
         //adds right
-        if(myPosition.chgPosition(k,i).inBounds()){
-            ChessPosition moveTo = myPosition.chgPosition(k,i);
+        addMoveHelper(result, k, i, myPosition, board, myTeamColor);
+        return result;
+    }
+
+    public void addMoveHelper(ArrayList<ChessMove> result, int x, int y, ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor myTeamColor){
+        if(myPosition.chgPosition(x,y).inBounds()){
+            ChessPosition moveTo = myPosition.chgPosition(x,y);
             ChessPiece targetDest = board.getPiece(moveTo);
             if(targetDest == null || targetDest.getTeamColor() != myTeamColor){
                 ChessMove add = new ChessMove(myPosition, moveTo, null);
                 result.add(add);
             }
-
         }
-        return result;
     }
 }
