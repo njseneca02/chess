@@ -31,6 +31,39 @@ public class DatabaseManager {
         }
     }
 
+    static void createTables() throws DataAccessException {
+        try{
+            var statement = """
+                    CREATE TABLE IF NOT EXISTS game
+                    (
+                    id integer not null primary key auto_increment,
+                    whiteUsername varchar(255) not null,
+                    blackUsername varchar(255) not null,
+                    gameName varchar(255) not null,
+                    chessGame varchar(4095) not null
+                    );
+                    CREATE TABLE IF NOT EXISTS auth
+                    (
+                    authToken varchar(255) not null,
+                    username varchar(255) not null primary key
+                    );
+                    CREATE TABLE IF NOT EXISTS user
+                    (
+                    username varchar(255) not null primary key,
+                    password varchar(255) not null,
+                    email varchar(255) not null
+                    )
+                    """;
+            var conn = DriverManager.getConnection(CONNECTION_URL + DATABASE_NAME, USER, PASSWORD);
+            try(var preparedStatement = conn.prepareStatement(statement)){
+                preparedStatement.executeUpdate();
+            }
+
+        }catch (SQLException e){
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
     /**
      * Creates the database if it does not already exist.
      */
@@ -41,6 +74,7 @@ public class DatabaseManager {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
+            createTables();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -58,13 +92,13 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    static Connection getConnection() throws DataAccessException {
-        try {
-            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+    static Connection createConnection() throws DataAccessException {
+        try (var conn = DriverManager.getConnection(CONNECTION_URL + DATABASE_NAME, USER, PASSWORD)){
             conn.setCatalog(DATABASE_NAME);
             return conn;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
     }
+
 }

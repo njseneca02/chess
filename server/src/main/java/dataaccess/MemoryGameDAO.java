@@ -15,8 +15,11 @@ public class MemoryGameDAO implements GameDAO{
         this.database = new HashMap<Integer, GameData>();
     }
 
-    public void createGame(GameData g) throws DataAccessException{
-        database.put(g.gameID(), g);
+    public int createGame(GameData g) throws DataAccessException{
+        GameData addedId = new GameData(idCounter, g.whiteUsername(), g.blackUsername(), g.gameName(), g.game());
+        database.put(addedId.gameID(), addedId);
+        idCounter++;
+        return idCounter - 1;
     }
 
     public GameData getGame(int id) throws DataAccessException{
@@ -38,11 +41,6 @@ public class MemoryGameDAO implements GameDAO{
         }
         database.replace(id, oldGame, newGame);
 
-    }
-
-    public int getIDCounter(){
-        idCounter++;
-        return idCounter - 1;
     }
 
     public void clear() throws DataAccessException{
