@@ -10,9 +10,9 @@ public class Server {
     private UserDAO userDAO;
 
     public Server(){
-        this.authDAO = new MemoryAuthDAO();
-        this.gameDAO = new MemoryGameDAO();
-        this.userDAO = new MemoryUserDAO();
+        this.authDAO = new SQLAuthDAO();
+        this.gameDAO = new SQLGameDAO();
+        this.userDAO = new SQLUserDAO();
     }
 
     public int run(int desiredPort) {

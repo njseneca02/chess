@@ -34,7 +34,7 @@ public class MemoryAuthDAO implements AuthDAO{
         authDatabase.clear();
     }
 
-    public Collection<AuthData> getDatabase(){
+    public Collection<AuthData> getDatabase() throws DataAccessException{
         return authDatabase;
     }
 

@@ -14,7 +14,7 @@ public interface AuthDAO {
 
     public void clear() throws DataAccessException;
 
-    public Collection<AuthData> getDatabase();
+    public Collection<AuthData> getDatabase() throws DataAccessException;
 
 
 }
