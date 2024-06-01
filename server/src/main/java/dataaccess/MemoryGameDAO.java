@@ -47,7 +47,4 @@ public class MemoryGameDAO implements GameDAO{
         database.clear();
     }
 
-    public HashMap<Integer, GameData> getDatabase(){
-        return database;
-    }
 }

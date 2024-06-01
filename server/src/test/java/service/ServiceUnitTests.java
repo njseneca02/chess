@@ -42,7 +42,7 @@ public class ServiceUnitTests {
 
     @Test
     public void testClearService(){
-        HashMap<Integer, GameData> game = null;
+        Collection<GameData> game = null;
         Collection<UserData> user = null;
         Collection<AuthData> auth = null;
         try{
@@ -50,7 +50,7 @@ public class ServiceUnitTests {
             gameDAO.createGame(new GameData(1, "a", "b", "game", new ChessGame()));
             userDAO.createUser(new UserData("n", "pass", "email"));
             utilService.clearDatabase();
-            game = gameDAO.getDatabase();
+            game = gameDAO.listGames();
             auth = authDAO.getDatabase();
             user = userDAO.getDatabase();
         }
@@ -226,6 +226,7 @@ public class ServiceUnitTests {
     @Test
     public void testCreateGameSuccess(){
         GameData game;
+        int gameSetSize = 0;
         try {
             RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
             RegisterResult result = userService.register(registerRequest);
@@ -233,34 +234,38 @@ public class ServiceUnitTests {
             CreateGameRequest request = new CreateGameRequest("gameName");
             gameService.createGame(request, authToken);
             game = gameDAO.getGame(1);
+            gameSetSize = gameDAO.listGames().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             game = null;
         }
-        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue( gameSetSize== 1);
         Assertions.assertTrue(game != null);
         Assertions.assertEquals("gameName", game.gameName());
     }
 
     @Test
     public void testCreateGameFail(){
+        int gameSetSize = 1;
         try {
             RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
             RegisterResult result = userService.register(registerRequest);
             String authToken = result.authToken();
             CreateGameRequest request = new CreateGameRequest(null);
             gameService.createGame(request, authToken);
+            gameSetSize = gameDAO.listGames().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
         }
-        Assertions.assertTrue(gameDAO.getDatabase().isEmpty());
+        Assertions.assertTrue(gameSetSize == 0);
     }
 
     @Test
     public void testJoinGameSuccess(){
         GameData game;
+        int gameSetSize = 0;
         try {
 
             RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
@@ -273,12 +278,14 @@ public class ServiceUnitTests {
             JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
             gameService.joinGame(joinRequest, authToken);
             game = gameDAO.getGame(1);
+
+            gameSetSize = gameDAO.listGames().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             game = null;
         }
-        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(gameSetSize== 1);
         Assertions.assertTrue(game != null);
         Assertions.assertEquals("username", game.whiteUsername());
     }
@@ -286,6 +293,7 @@ public class ServiceUnitTests {
     @Test
     public void testJoinGameFail(){
         GameData game;
+        int gameSetSize = 0;
         try {
 
             RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
@@ -302,12 +310,14 @@ public class ServiceUnitTests {
             gameService.joinGame(joinRequest, authToken);
             gameService.joinGame(joinRequest2, authToken2);
             game = gameDAO.getGame(1);
+
+            gameSetSize = gameDAO.listGames().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             game = null;
         }
-        Assertions.assertTrue(gameDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(gameSetSize == 1);
         Assertions.assertTrue(game != null);
         Assertions.assertEquals("username", game.whiteUsername());
     }

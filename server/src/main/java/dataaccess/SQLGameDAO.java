@@ -138,8 +138,4 @@ public class SQLGameDAO implements GameDAO{
         }
 
     }
-
-    public HashMap<Integer, GameData> getDatabase() {
-        return null;
-    }
 }
