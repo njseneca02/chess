@@ -29,7 +29,7 @@ public class MemoryUserDAO implements UserDAO{
         userDatabase.clear();
     }
 
-    public Collection<UserData> getDatabase(){
+    public Collection<UserData> getDatabase() throws DataAccessException{
         return userDatabase;
     }
 

@@ -33,7 +33,7 @@ public class DatabaseManager {
 
     static void createTables() throws DataAccessException {
         try{
-            var statement = """
+            var statementGame = """
                     CREATE TABLE IF NOT EXISTS game
                     (
                     id integer not null primary key auto_increment,
@@ -42,11 +42,15 @@ public class DatabaseManager {
                     gameName varchar(255) not null,
                     chessGame varchar(4095) not null
                     );
+                    """;
+            var statementAuth = """
                     CREATE TABLE IF NOT EXISTS auth
                     (
-                    authToken varchar(255) not null,
-                    username varchar(255) not null primary key
+                    authToken varchar(255) not null primary key,
+                    username varchar(255) not null
                     );
+                    """;
+            var statementUser = """
                     CREATE TABLE IF NOT EXISTS user
                     (
                     username varchar(255) not null primary key,
@@ -54,9 +58,13 @@ public class DatabaseManager {
                     email varchar(255) not null
                     )
                     """;
-            var conn = DriverManager.getConnection(CONNECTION_URL + DATABASE_NAME, USER, PASSWORD);
-            try(var preparedStatement = conn.prepareStatement(statement)){
-                preparedStatement.executeUpdate();
+            try(Connection connection = getConnection()) {
+                connection.setAutoCommit(false);
+                try (var preparedStatement = connection.createStatement()) {
+                    preparedStatement.executeUpdate(statementGame);
+                    preparedStatement.executeUpdate(statementUser);
+                    preparedStatement.executeUpdate(statementAuth);
+                }
             }
 
         }catch (SQLException e){

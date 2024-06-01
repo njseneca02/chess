@@ -12,6 +12,6 @@ public interface UserDAO {
 
     public void clear() throws DataAccessException;
 
-    public Collection<UserData> getDatabase();
+    public Collection<UserData> getDatabase() throws DataAccessException;
 
 }

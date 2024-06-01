@@ -5,9 +5,18 @@ import model.AuthData;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class SQLAuthDAO implements AuthDAO{
+
+    static {
+        try {
+            DatabaseManager.createDatabase();
+        }
+        catch(DataAccessException e){
+            System.out.println("failed to create Database");
+        }
+    }
+
     public void createAuth(AuthData u) throws DataAccessException {
         var sql = "INSERT into auth (authToken, username) values (?, ?)";
 
@@ -25,8 +34,8 @@ public class SQLAuthDAO implements AuthDAO{
     }
 
     public AuthData getAuth(String token) throws DataAccessException {
-        String authToken = null;
-        String username = null;
+        String authToken;
+        String username;
 
         var sql = "SELECT authToken, username FROM auth WHERE authToken = " + token;
         try(Connection connection = DatabaseManager.getConnection()) {
