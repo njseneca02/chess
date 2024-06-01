@@ -2,12 +2,11 @@ package dataaccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import model.AuthData;
 import model.GameData;
 
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class SQLGameDAO implements GameDAO{
     public int createGame(GameData g) throws DataAccessException {
@@ -66,11 +65,44 @@ public class SQLGameDAO implements GameDAO{
     }
 
     public Collection<GameData> listGames() throws DataAccessException {
-        return List.of();
+        HashSet<GameData> gameList = new HashSet<>();
+        var sql = "SELECT * from game";
+
+        try(Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()){
+                    int id = rs.getInt("id");
+                    String whiteUsername = rs.getString("whiteUsername");
+                    String blackUsername = rs.getString("blackUsername");
+                    String gameName = rs.getString("gameName");
+                    String chessJson = rs.getString("chessGame");
+                    Gson gson = new Gson();
+                    ChessGame chess = (ChessGame)gson.fromJson(chessJson, ChessGame.class);
+
+                    GameData game = new GameData(id, whiteUsername, blackUsername, gameName, chess);
+                    gameList.add(game);
+
+                }
+                return gameList;
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     public void clear() throws DataAccessException {
+        var sql = "DELETE from game";
 
+        try(Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     public void updatePlayer(int id, String username, ChessGame.TeamColor color) throws DataAccessException {
