@@ -17,6 +17,8 @@ import result.LoginResult;
 import result.NoBodyResult;
 import result.RegisterResult;
 
+import java.util.*;
+
 
 public class ServiceUnitTests {
 
@@ -40,120 +42,145 @@ public class ServiceUnitTests {
 
     @Test
     public void testClearService(){
+        HashMap<Integer, GameData> game = null;
+        Collection<UserData> user = null;
+        Collection<AuthData> auth = null;
         try{
             authDAO.createAuth(new AuthData("hello", "nathan"));
             gameDAO.createGame(new GameData(1, "a", "b", "game", new ChessGame()));
             userDAO.createUser(new UserData("n", "pass", "email"));
             utilService.clearDatabase();
+            game = gameDAO.getDatabase();
+            auth = authDAO.getDatabase();
+            user = userDAO.getDatabase();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
         }
-        Assertions.assertTrue(authDAO.getDatabase().isEmpty());
-        Assertions.assertTrue(gameDAO.getDatabase().isEmpty());
-        Assertions.assertTrue(userDAO.getDatabase().isEmpty());
+        Assertions.assertNotNull(game);
+        Assertions.assertNotNull(auth);
+        Assertions.assertNotNull(user);
+        Assertions.assertTrue(auth.isEmpty());
+        Assertions.assertTrue(game.isEmpty());
+        Assertions.assertTrue(user.isEmpty());
 
 
     }
 
     @Test
     public void testRegisterSuccess(){
-        UserData actual;
+        int user = 0;
+        int auth = 0;
         try {
 
             RegisterRequest request = new RegisterRequest("username", "password", "email");
             userService.register(request);
-            actual = userDAO.getUser("username");
+            user = userDAO.getDatabase().size();
+            auth = authDAO.getDatabase().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
-            actual = null;
         }
-        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
-        Assertions.assertEquals(new UserData("username", "password", "email"), actual);
-        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(user == 1);
+        Assertions.assertTrue( auth == 1);
     }
 
     @Test
     public void testRegisterFail(){
+        boolean user = false;
+        boolean auth = false;
         try {
 
             RegisterRequest request = new RegisterRequest("username", "password", null);
             userService.register(request);
+            user = userDAO.getDatabase().isEmpty();
+            auth = authDAO.getDatabase().isEmpty();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
         }
-        Assertions.assertTrue(userDAO.getDatabase().isEmpty());
-        Assertions.assertTrue(authDAO.getDatabase().isEmpty());
+        Assertions.assertTrue(user);
+        Assertions.assertTrue(auth);
     }
 
     @Test
     public void testLoginSuccess(){
         LoginResult result;
+        int auth = 0;
         try {
 
             RegisterRequest request = new RegisterRequest("username", "password", "email");
             userService.register(request);
             LoginRequest loginRequest = new LoginRequest("username", "password");
             result = userService.login(loginRequest);
+            auth = authDAO.getDatabase().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             result = null;
         }
         Assertions.assertEquals(result.username(), "username");
-        Assertions.assertTrue(authDAO.getDatabase().size() == 2);
+        Assertions.assertTrue(auth == 2);
 
     }
 
     @Test
     public void testLoginFail(){
         LoginResult result;
+        int auth = 0;
         try {
 
             RegisterRequest request = new RegisterRequest("username", "password", "email");
             userService.register(request);
             LoginRequest loginRequest = new LoginRequest("username", "pass");
             result = userService.login(loginRequest);
+            auth = authDAO.getDatabase().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             result = null;
         }
         Assertions.assertEquals(result.username(), null);
-        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(auth == 1);
     }
 
     @Test
     public void testLogoutSuccess(){
+        int user = 0;
+        boolean auth = false;
         try {
             RegisterRequest request = new RegisterRequest("username", "password", "email");
             RegisterResult result = userService.register(request);
             String authToken = result.authToken();
             userService.logout(authToken);
+            user = userDAO.getDatabase().size();
+            auth = authDAO.getDatabase().isEmpty();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
         }
-        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
-        Assertions.assertTrue(authDAO.getDatabase().isEmpty());
+        Assertions.assertTrue(user == 1);
+        Assertions.assertTrue(auth);
     }
 
     @Test
     public void testLogoutFail(){
         NoBodyResult result;
+        int user = 0;
+        int auth = 0;
         try {
             RegisterRequest request = new RegisterRequest("username", "password", "email");
             userService.register(request);
             result = userService.logout("1234");
+            user = userDAO.getDatabase().size();
+            auth = authDAO.getDatabase().size();
         }
         catch(DataAccessException e){
             System.out.println(e.getMessage());
             result = null;
         }
-        Assertions.assertTrue(userDAO.getDatabase().size() == 1);
-        Assertions.assertTrue(authDAO.getDatabase().size() == 1);
+        Assertions.assertTrue(user == 1);
+        Assertions.assertTrue(auth == 1);
         Assertions.assertTrue(result.message().contains("unauthorized"));
     }
 

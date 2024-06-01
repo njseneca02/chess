@@ -34,9 +34,10 @@ public class SQLUserDAO implements UserDAO{
         String password;
         String email;
 
-        var sql = "SELECT username, password, email FROM user WHERE username = " + username;
+        var sql = "SELECT username, password, email FROM user WHERE username = ?";
         try(Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
                 ResultSet rs = statement.executeQuery();
                 rs.next();
                 user = rs.getString(1);
@@ -48,7 +49,6 @@ public class SQLUserDAO implements UserDAO{
         }
         catch (SQLException e) {
             return null;
-            //throw new DataAccessException(e.getMessage());
         }
     }
 
