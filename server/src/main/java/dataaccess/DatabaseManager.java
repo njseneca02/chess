@@ -36,12 +36,12 @@ public class DatabaseManager {
             var statementGame = """
                     CREATE TABLE IF NOT EXISTS game
                     (
-                    id integer not null primary key auto_increment,
-                    whiteUsername varchar(255) not null,
-                    blackUsername varchar(255) not null,
+                    id integer not null auto_increment primary key,
+                    whiteUsername varchar(255),
+                    blackUsername varchar(255),
                     gameName varchar(255) not null,
                     chessGame varchar(4095) not null
-                    );
+                    ) auto_increment = 1;
                     """;
             var statementAuth = """
                     CREATE TABLE IF NOT EXISTS auth
