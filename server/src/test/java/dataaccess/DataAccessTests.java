@@ -39,6 +39,19 @@ public class DataAccessTests {
     }
 
     @Test
+    public void testGameCreateFail(){
+        GameData g = new GameData(5, null, null, null, new ChessGame());
+        int id = 0;
+        try {
+            id = gameDAO.createGame(g);
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertEquals(0, id);
+    }
+
+    @Test
     public void testGameGet(){
         GameData g = new GameData(5, null, null, "gameName", new ChessGame());
         int id = 0;
@@ -51,6 +64,25 @@ public class DataAccessTests {
             System.out.println(e.getMessage());
         }
         Assertions.assertTrue(test.equals("gameName"));
+    }
+
+    @Test
+    public void testGameGetFail(){
+        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        String test = null;
+        try {
+            gameDAO.createGame(g);
+            if(gameDAO.getGame(0) == null){
+                test = null;
+            }
+            else {
+                test = gameDAO.getGame(0).gameName();
+            }
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertNull(test);
     }
 
     @Test
@@ -72,7 +104,24 @@ public class DataAccessTests {
     }
 
     @Test
-    public void testGameUpdate(){
+    public void testGameListFail(){
+        GameData g1 = new GameData(5, null, null, "gameName1", new ChessGame());
+        GameData g2 = new GameData(6, null, null, null, new ChessGame());
+        int size = 0;
+        try {
+            gameDAO.createGame(g1);
+            size = gameDAO.listGames().size();
+            gameDAO.createGame(g2);
+            size = gameDAO.listGames().size();
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertEquals(size, 1);
+    }
+
+    @Test
+    public void testGameUpdatePlayer(){
         GameData g = new GameData(5, null, null, "gameName", new ChessGame());
         String test = null;
         try {
@@ -84,6 +133,22 @@ public class DataAccessTests {
             System.out.println(e.getMessage());
         }
         Assertions.assertTrue(test.equals("testName"));
+    }
+
+    @Test
+    public void testGameUpdatePlayerFail(){
+        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        String test = null;
+        try {
+            int id = gameDAO.createGame(g);
+            gameDAO.updatePlayer(id, "testName", ChessGame.TeamColor.BLACK);
+            gameDAO.updatePlayer(0, "replaceName", ChessGame.TeamColor.BLACK);
+            test = gameDAO.getGame(id).blackUsername();
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertEquals("testName", test);
     }
 
     @Test
