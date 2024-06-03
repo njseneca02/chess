@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
@@ -284,6 +285,165 @@ public class DataAccessTests {
             pass = userDAO.getDatabase().size();
         }
         catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 1);
+    }
+
+    // authDAO tests
+
+    @Test
+    public void testAuthCreate(){
+        AuthData a = new AuthData("authToken", "username");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testAuthCreateFail(){
+        AuthData a = new AuthData(null, "username");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 1);
+    }
+
+    @Test
+    public void testAuthGet(){
+        AuthData a = new AuthData("authToken", "username");
+        String username = null;
+        try {
+            authDAO.createAuth(a);
+            AuthData auth = authDAO.getAuth("authToken");
+            username = auth.username();
+
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertEquals("username", username);
+    }
+
+    @Test
+    public void testAuthGetFail(){
+        AuthData a = new AuthData("authToken", "username");
+        String username = null;
+        try {
+            authDAO.createAuth(a);
+            AuthData auth = authDAO.getAuth("auth");
+            if(auth == null){
+                username = null;
+            }
+            else{
+                username = auth.username();
+            }
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertNull(username);
+    }
+
+    @Test
+    public void testAuthDelete(){
+        AuthData a = new AuthData("authToken", "username");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a);
+            Assertions.assertEquals(authDAO.getDatabase().size(), 1);
+            authDAO.deleteAuth(a);
+            Assertions.assertEquals(authDAO.getDatabase().size(), 0);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testAuthDeleteFail(){
+        AuthData a = new AuthData("authToken", "username");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a);
+            Assertions.assertEquals(authDAO.getDatabase().size(), 1);
+            authDAO.deleteAuth(new AuthData("auth", "username"));
+            Assertions.assertEquals(authDAO.getDatabase().size(), 1);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testAuthClear(){
+        AuthData a1 = new AuthData("authToken1", "username1");
+        AuthData a2 = new AuthData("authToken2", "username2");
+        AuthData a3 = new AuthData("authToken3", "username3");
+        int pass = 2;
+        try {
+            authDAO.createAuth(a1);
+            authDAO.createAuth(a2);
+            authDAO.createAuth(a3);
+            authDAO.clear();
+            pass = authDAO.getDatabase().size();
+
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testAuthList(){
+        AuthData a1 = new AuthData("authToken1", "username1");
+        AuthData a2 = new AuthData("authToken2", "username2");
+        AuthData a3 = new AuthData("authToken3", "username3");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a1);
+            authDAO.createAuth(a2);
+            authDAO.createAuth(a3);
+            pass = authDAO.getDatabase().size();
+
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 3);
+    }
+
+    @Test
+    public void testAuthListFail(){
+        AuthData a1 = new AuthData("authToken1", "username1");
+        AuthData a2 = new AuthData(null, "username2");
+        int pass = 0;
+        try {
+            authDAO.createAuth(a1);
+            authDAO.createAuth(a2);
+            pass = authDAO.getDatabase().size();
+
+        }
+        catch(DataAccessException e){
+            pass = 1;
             System.out.println(e.getMessage());
         }
         Assertions.assertTrue(pass == 1);
