@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ public class DataAccessTests {
             System.out.println("clear for tests has failed: " + e.getMessage());
         }
     }
+
+    // gameDAO tests
 
     @Test
     public void testGameCreate(){
@@ -168,5 +171,121 @@ public class DataAccessTests {
             System.out.println(e.getMessage());
         }
         Assertions.assertEquals(size, 0);
+    }
+
+    // userDAO tests
+
+    @Test
+    public void testUserCreate(){
+        UserData u = new UserData("username", "password", "email");
+        int pass = 0;
+        try {
+            userDAO.createUser(u);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testUserCreateFail(){
+        UserData u = new UserData(null, "password", "email");
+        int pass = 0;
+        try {
+            userDAO.createUser(u);
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertEquals(1, pass);
+    }
+
+    @Test
+    public void testUserGet(){
+        UserData u = new UserData("username", "password", "email");
+        UserData user = null;
+        String username = null;
+        try {
+            userDAO.createUser(u);
+            user = userDAO.getUser("username");
+            username = user.username();
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals("username", username);
+    }
+
+    @Test
+    public void testUserGetFail(){
+        UserData u = new UserData("username", "password", "email");
+        UserData user;
+        String username = null;
+        try {
+            userDAO.createUser(u);
+            user = userDAO.getUser(null);
+            if(user == null){
+                username = null;
+            }
+            else{
+                username = user.username();
+            }
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertNull(username);
+    }
+
+    @Test
+    public void testUserClear(){
+        UserData u = new UserData("username", "password", "email");
+        int pass = 2;
+        try {
+            userDAO.createUser(u);
+            userDAO.clear();
+            pass = userDAO.getDatabase().size();
+        }
+        catch(DataAccessException e){
+            pass = 1;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 0);
+    }
+
+    @Test
+    public void testUserList(){
+        UserData u = new UserData("username", "password", "email");
+        int pass = 0;
+        try {
+            userDAO.createUser(u);
+            pass = userDAO.getDatabase().size();
+        }
+        catch(DataAccessException e){
+            pass = 2;
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 1);
+    }
+
+    @Test
+    public void testUserListFail(){
+        UserData u1 = new UserData("username", "password", "email");
+        UserData u2 = new UserData(null, "password", "email");
+        int pass = 0;
+        try {
+            userDAO.createUser(u1);
+            pass = userDAO.getDatabase().size();
+            userDAO.createUser(u2);
+            pass = userDAO.getDatabase().size();
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        Assertions.assertTrue(pass == 1);
     }
 }
