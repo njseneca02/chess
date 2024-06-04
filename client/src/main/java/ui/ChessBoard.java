@@ -9,7 +9,7 @@ import static ui.EscapeSequences.*;
 public class ChessBoard {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_CHARS = 3;
+    private static final int SQUARE_SIZE_IN_CHARS = 1;
     private static final int LINE_WIDTH_IN_CHARS = 1;
     private static final String EMPTY = "   ";
     private static final String X = " X ";
@@ -26,6 +26,8 @@ public class ChessBoard {
 
         drawTicTacToeBoard(out);
 
+        drawHeaders(out);
+
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_WHITE);
     }
@@ -34,13 +36,13 @@ public class ChessBoard {
 
         setBlack(out);
 
-        String[] headers = { "a", "b", "c", "d", "e", "f", "g", "h" };
+        String[] headers = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
 
-            if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
-                out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
-            }
+//            if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
+//                out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
+//            }
         }
 
         out.println();
@@ -63,50 +65,29 @@ public class ChessBoard {
 
         setBlack(out);
     }
-
+// pass in a 2D array here and have it cycle throw each "row"
     private static void drawTicTacToeBoard(PrintStream out) {
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
 
             drawRowOfSquares(out);
 
-            if (boardRow < BOARD_SIZE_IN_SQUARES - 1) {
-                drawVerticalLine(out);
-                setBlack(out);
-            }
         }
     }
-
+// pass each row into here and it can check to see what piece it should print on the row
+    // also need to add code so that before each row there is a number printed as well as after.
     private static void drawRowOfSquares(PrintStream out) {
 
-        for (int squareRow = 0; squareRow < SQUARE_SIZE_IN_CHARS; ++squareRow) {
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
                 setWhite(out);
 
-                if (squareRow == SQUARE_SIZE_IN_CHARS / 2) {
-                    int prefixLength = SQUARE_SIZE_IN_CHARS / 2;
-                    int suffixLength = SQUARE_SIZE_IN_CHARS - prefixLength - 1;
-
-                    out.print(EMPTY.repeat(prefixLength));
-                    printPlayer(out, rand.nextBoolean() ? X : O);
-                    out.print(EMPTY.repeat(suffixLength));
-                }
-                else {
-                    out.print(EMPTY.repeat(SQUARE_SIZE_IN_CHARS));
-                }
-
-                if (boardCol < BOARD_SIZE_IN_SQUARES - 1) {
-                    // Draw right line
-                    setRed(out);
-                    out.print(EMPTY.repeat(LINE_WIDTH_IN_CHARS));
-                }
+                printPlayer(out, rand.nextBoolean() ? X : O);
 
                 setBlack(out);
             }
 
             out.println();
         }
-    }
 
     private static void drawVerticalLine(PrintStream out) {
 
