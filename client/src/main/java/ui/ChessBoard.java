@@ -14,8 +14,6 @@ public class ChessBoard {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final String EMPTY = "   ";
-    private static final String X = " X ";
-    private static final String O = " O ";
     private static final String[] whiteHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
     private static final String[] blackHeaders = {" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
 
@@ -28,7 +26,7 @@ public class ChessBoard {
         ChessPiece[][] startingBoard = board.getChessBoard();
 
         drawWhiteBoard(out, startingBoard);
-        drawBlackBoard(out, startingBoard);
+        drawBlackBoard(out, reverseBoard(startingBoard));
     }
 
     private static void drawWhiteBoard(PrintStream out, ChessPiece[][] chessBoard){
@@ -188,14 +186,29 @@ public class ChessBoard {
 
         else if(piece.getTeamColor() == ChessGame.TeamColor.BLACK){
             out.print(SET_TEXT_COLOR_BLACK);
-            out.print(converter.get(piece));
+            out.print(converter.get(piece.getPieceType()));
             setWhite(out);
         }
         else if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
             out.print(SET_TEXT_COLOR_RED);
-            out.print(converter.get(piece));
+            out.print(converter.get(piece.getPieceType()));
             setWhite(out);
         }
+    }
+
+    private static ChessPiece[][] reverseBoard(ChessPiece[][] board){
+        ChessPiece[][] result = new ChessPiece[8][8];
+        int x = 0;
+        int y;
+        for(int i = 7; i >= 0; i--){
+            y = 0;
+            for(int k = 7; k >= 0; k--){
+                result[i][k] = board[x][y];
+                y++;
+            }
+            x++;
+        }
+        return result;
     }
 
 }
