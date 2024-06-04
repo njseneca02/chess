@@ -204,4 +204,8 @@ public class ChessBoard implements Cloneable{
         }
         return clone;
     }
+
+    public ChessPiece[][] getChessBoard(){
+        return chessBoard;
+    }
 }
