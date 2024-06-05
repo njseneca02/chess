@@ -73,7 +73,7 @@ public class ChessBoard {
 
         setBlack(out);
     }
-// pass in a 2D array here and have it cycle throw each "row"
+
     private static void drawTicTacToeBoard(PrintStream out, String team, ChessPiece[][] chessBoard) {
         int rowId;
         if(team == "black"){
@@ -105,8 +105,7 @@ public class ChessBoard {
 
         }
     }
-// pass each row into here and it can check to see what piece it should print on the row
-    // also need to add code so that before each row there is a number printed as well as after.
+
     private static void drawRowOfSquaresBlue(PrintStream out, ChessPiece[] row) {
 
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {

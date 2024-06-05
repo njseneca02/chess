@@ -1,6 +1,9 @@
 package ui;
 
+import exception.ResponseException;
 import network.ServerFacade;
+
+import java.util.Arrays;
 
 public class ChessClient {
     private String visitorName = null;
@@ -17,6 +20,7 @@ public class ChessClient {
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
+
             return switch (cmd) {
                 case "help" -> help();
                 case "login" -> login();
@@ -56,32 +60,32 @@ public class ChessClient {
         }
     }
 
-    public String login(){
-
+    public String login() throws ResponseException{
+        return null;
     }
 
-    public String register(){
-
+    public String register() throws ResponseException{
+        return null;
     }
 
-    public String logout(){
-
+    public String logout() throws ResponseException{
+        return null;
     }
 
-    public String createGame(){
-
+    public String createGame() throws ResponseException{
+        return null;
     }
 
-    public String listGames(){
-
+    public String listGames() throws ResponseException{
+        return null;
     }
 
-    public String joinGame(){
-
+    public String joinGame() throws ResponseException{
+        return null;
     }
 
-    public String observeGame(){
-
+    public String observeGame() throws ResponseException{
+        return null;
     }
 
     private void assertSignedIn() throws ResponseException {
