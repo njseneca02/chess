@@ -11,8 +11,7 @@ public class Repl {
     }
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to the pet store. Sign in to start.");
-        System.out.print(client.help());
+        System.out.println("\uD83D\uDC36 Welcome to the pet store. Type help to start.");
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -31,10 +30,10 @@ public class Repl {
         System.out.println();
     }
 
-    public void notify(Notification notification) {
-        System.out.println(SET_TEXT_COLOR_RED + notification.message());
-        printPrompt();
-    }
+//    public void notify(Notification notification) {
+//        System.out.println(SET_TEXT_COLOR_RED + notification.message());
+//        printPrompt();
+//    }
 
     private void printPrompt() {
         System.out.print("\n" + SET_TEXT_COLOR_GREEN + ">>> ");
