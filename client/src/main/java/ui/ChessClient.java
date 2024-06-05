@@ -3,13 +3,18 @@ package ui;
 import exception.ResponseException;
 import network.ServerFacade;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Scanner;
+
+import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
 
 public class ChessClient {
     private String visitorName = null;
     private final ServerFacade server;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
+    private String authToken;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -65,7 +70,20 @@ public class ChessClient {
     }
 
     public String register() throws ResponseException{
-        return null;
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "username: ");
+        String username = scanner.nextLine();
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "password: ");
+        String password = scanner.nextLine();
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "email: ");
+        String email = scanner.nextLine();
+        try {
+            server.register(username, password, email);
+            return "Logged in as " + username;
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
     }
 
     public String logout() throws ResponseException{
@@ -92,6 +110,19 @@ public class ChessClient {
         if (state == State.SIGNEDOUT) {
             throw new ResponseException(400, "You must sign in");
         }
+    }
+
+    public boolean isLoggedIn(){
+        if(state == State.SIGNEDOUT){
+            return false;
+        }
+        else{
+        return true;
+        }
+    }
+
+    public String getUsername(){
+        return visitorName;
     }
 
 }

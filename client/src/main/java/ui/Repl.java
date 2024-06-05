@@ -36,7 +36,12 @@ public class Repl {
 //    }
 
     private void printPrompt() {
-        System.out.print("\n" + SET_TEXT_COLOR_GREEN + ">>> ");
+        if(client.isLoggedIn()) {
+            System.out.print("\n" + SET_TEXT_COLOR_GREEN + client.getUsername() + ">>> ");
+        }
+        else{
+            System.out.print("\n" + SET_TEXT_COLOR_GREEN + ">>> ");
+        }
     }
 
 }
