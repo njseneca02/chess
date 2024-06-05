@@ -1,10 +1,13 @@
 package network;
 
 import com.google.gson.Gson;
+import model.GameData;
 import network.request.RegisterRequest;
+import network.result.ListGameResult;
 import network.result.RegisterResult;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class ServerFacade {
 
@@ -28,6 +31,23 @@ public class ServerFacade {
                 return resBody.authToken();
             }
             }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    public Collection<GameData> listGames(String authToken) throws IOException{
+        Gson gson = new Gson();
+        try{
+            String json = communicator.listGames(serverUrl + "/game", authToken);
+            ListGameResult resBody = gson.fromJson(json, ListGameResult.class);
+            if(resBody.message() != null){
+                throw new IOException(resBody.message());
+            }
+            else{
+                return resBody.games();
+            }
+        }
         catch(IOException e){
             throw new IOException(e.getMessage());
         }

@@ -1,10 +1,13 @@
 package ui;
 
 import exception.ResponseException;
+import model.GameData;
 import network.ServerFacade;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
@@ -15,6 +18,7 @@ public class ChessClient {
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
     private String authToken;
+    private HashMap<Integer, String> listOfGames = new HashMap<>();
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -97,7 +101,22 @@ public class ChessClient {
     }
 
     public String listGames() throws ResponseException{
-        return null;
+        assertSignedIn();
+        String result = "";
+        try {
+            Collection<GameData> games = server.listGames(authToken);
+            int i = 1;
+            for(GameData game: games){
+                String data = i + " - " + game.gameName() + " White: " + game.whiteUsername() + " Black: " + game.blackUsername();
+                listOfGames.put(i, data);
+                i++;
+                result += data + "\n";
+            }
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        return result;
     }
 
     public String joinGame() throws ResponseException{
