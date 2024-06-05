@@ -40,7 +40,7 @@ public class Repl {
             System.out.print("\n" + SET_TEXT_COLOR_GREEN + client.getUsername() + ">>> ");
         }
         else{
-            System.out.print("\n" + SET_TEXT_COLOR_GREEN + ">>> ");
+            System.out.print("\n" + SET_TEXT_COLOR_GREEN + " >>> ");
         }
     }
 

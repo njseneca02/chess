@@ -43,7 +43,7 @@ public class RegisterHandler{
             res.status(500);
             result = new RegisterResult("Error: " + e.getMessage(), null, null);
         }
-
+        res.body(gson.toJson(result));
         return gson.toJson(result);
 
     }

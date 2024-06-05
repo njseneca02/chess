@@ -49,7 +49,7 @@ public class JoinGameHandler {
             res.status(500);
             result = new NoBodyResult("Error: " + e.getMessage());
         }
-
+        res.body(gson.toJson(result));
         return gson.toJson(result);
     }
 

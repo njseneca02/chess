@@ -23,7 +23,7 @@ public class ClientCommunicator {
             requestBody.write(reqBody.getBytes());
         }
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK ) {
             try(InputStream responseBody = connection.getInputStream()){
                 BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
                 String line;
@@ -35,6 +35,18 @@ public class ClientCommunicator {
                 reader.close();
             }
 
+        }
+        else {
+            try(InputStream responseBody = connection.getErrorStream()){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    response += line;
+                }
+
+                reader.close();
+            }
         }
         return response;
     }

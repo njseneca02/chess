@@ -38,7 +38,7 @@ public class ListGameHandler {
             res.status(500);
             result = new ListGameResult("Error: " + e.getMessage(), null);
         }
-
+        res.body(gson.toJson(result));
         return gson.toJson(result);
     }
 }

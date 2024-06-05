@@ -78,12 +78,14 @@ public class ChessClient {
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "email: ");
         String email = scanner.nextLine();
         try {
-            server.register(username, password, email);
-            return "Logged in as " + username;
+            authToken = server.register(username, password, email);
         }
         catch(IOException e){
             return e.getMessage();
         }
+        state = State.SIGNEDIN;
+        visitorName = username;
+        return "Logged in as " + username;
     }
 
     public String logout() throws ResponseException{

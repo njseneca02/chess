@@ -39,7 +39,7 @@ public class LoginHandler {
             res.status(500);
             result = new LoginResult("Error: " + e.getMessage(), null, null);
         }
-
+        res.body(gson.toJson(result));
         return gson.toJson(result);
 
     }

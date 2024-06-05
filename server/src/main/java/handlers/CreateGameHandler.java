@@ -44,7 +44,7 @@ public class CreateGameHandler {
             res.status(500);
             result = new CreateGameResult("Error: " + e.getMessage(), null);
         }
-
+        res.body(gson.toJson(result));
         return gson.toJson(result);
     }
 }
