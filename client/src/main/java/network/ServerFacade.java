@@ -2,9 +2,8 @@ package network;
 
 import com.google.gson.Gson;
 import model.GameData;
-import network.request.RegisterRequest;
-import network.result.ListGameResult;
-import network.result.RegisterResult;
+import network.request.*;
+import network.result.*;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -52,4 +51,21 @@ public class ServerFacade {
             throw new IOException(e.getMessage());
         }
     }
+
+    public void createGame(String gameName, String authToken) throws IOException{
+        Gson gson = new Gson();
+        CreateGameRequest reqBody = new CreateGameRequest(gameName);
+        try{
+            String json = communicator.createGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
+            CreateGameResult resBody = gson.fromJson(json, CreateGameResult.class);
+            if(resBody.message() != null){
+                throw new IOException(resBody.message());
+            }
+        }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
+
+
 }

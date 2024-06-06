@@ -5,7 +5,6 @@ import model.GameData;
 import network.ServerFacade;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -97,7 +96,17 @@ public class ChessClient {
     }
 
     public String createGame() throws ResponseException{
-        return null;
+        assertSignedIn();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game name: ");
+        String gameName = scanner.nextLine();
+        try{
+            server.createGame(gameName, authToken);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        return "created game called: " + gameName;
     }
 
     public String listGames() throws ResponseException{
@@ -129,7 +138,7 @@ public class ChessClient {
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {
-            throw new ResponseException(400, "You must sign in");
+            throw new ResponseException(400, "You must log in");
         }
     }
 

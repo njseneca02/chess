@@ -37,10 +37,10 @@ public class Repl {
 
     private void printPrompt() {
         if(client.isLoggedIn()) {
-            System.out.print("\n" + SET_TEXT_COLOR_GREEN + client.getUsername() + ">>> ");
+            System.out.print("\n" + SET_TEXT_COLOR_GREEN + client.getUsername() + " >>> ");
         }
         else{
-            System.out.print("\n" + SET_TEXT_COLOR_GREEN + " >>> ");
+            System.out.print("\n" + SET_TEXT_COLOR_GREEN + ">>> ");
         }
     }
 
