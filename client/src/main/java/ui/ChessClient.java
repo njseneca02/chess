@@ -129,7 +129,7 @@ public class ChessClient {
         catch(IOException e){
             return e.getMessage();
         }
-        return "created game called: " + gameName;
+        return "Success! \n" + listGames();
     }
 
     public String listGames() throws ResponseException{

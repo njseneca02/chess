@@ -103,7 +103,7 @@ public class ServerFacade {
     public void joinGame(GameData game, String username, String authToken, String teamColor) throws IOException{
         Gson gson = new Gson();
         JoinGameRequest reqBody;
-        if(teamColor == "white"){
+        if(teamColor.equals("white")){
             reqBody = new JoinGameRequest(ChessGame.TeamColor.WHITE, String.valueOf(game.gameID()));
         }
         else{
