@@ -6,15 +6,17 @@ import java.net.URL;
 
 public class ClientCommunicator {
 
-    private void read(InputStream responseBody, String response) throws IOException{
+    private String read(InputStream responseBody) throws IOException{
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
         String line;
+        String response = "";
 
         while ((line = reader.readLine()) != null) {
             response += line;
         }
 
         reader.close();
+        return response;
     }
 
     private String handleResponse(HttpURLConnection connection) throws IOException {
@@ -22,12 +24,12 @@ public class ClientCommunicator {
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             try (InputStream responseBody = connection.getInputStream()) {
-                read(responseBody, response);
+                response = read(responseBody);
             }
         }
         else {
             try (InputStream responseBody = connection.getErrorStream()) {
-                read(responseBody, response);
+                response = read(responseBody);
             }
         }
         return response;

@@ -1,6 +1,5 @@
 package client;
 
-import model.GameData;
 import network.ServerFacade;
 import org.junit.jupiter.api.*;
 import server.Server;
