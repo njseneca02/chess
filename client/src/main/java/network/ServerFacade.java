@@ -71,13 +71,27 @@ public class ServerFacade {
         LoginRequest reqBody = new LoginRequest(username, password);
         Gson gson = new Gson();
         try{
-            String json = communicator.register(serverUrl + "/session", gson.toJson(reqBody));
+            String json = communicator.login(serverUrl + "/session", gson.toJson(reqBody));
             RegisterResult resBody = gson.fromJson(json, RegisterResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
             }
             else{
                 return resBody.authToken();
+            }
+        }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    public void logout(String authToken) throws IOException{
+        Gson gson = new Gson();
+        try{
+            String json = communicator.logout(serverUrl + "/session", authToken);
+            ListGameResult resBody = gson.fromJson(json, ListGameResult.class);
+            if(resBody.message() != null){
+                throw new IOException(resBody.message());
             }
         }
         catch(IOException e){

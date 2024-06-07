@@ -106,4 +106,20 @@ public class ClientCommunicator {
 
         return handleResponse(connection);
     }
+
+    public String logout(String urlString, String authToken) throws IOException {
+        URL url = new URL(urlString);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("DELETE");
+        connection.addRequestProperty("Authorization", authToken);
+
+        connection.connect();
+
+        return handleResponse(connection);
+    }
+
+
 }

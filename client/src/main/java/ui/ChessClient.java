@@ -106,7 +106,16 @@ public class ChessClient {
     }
 
     public String logout() throws ResponseException{
-        return null;
+        assertSignedIn();
+        try{
+            server.logout(authToken);
+        }
+        catch (IOException e){
+            return e.getMessage();
+        }
+        state = State.SIGNEDOUT;
+        visitorName = null;
+        return "Logged out successfully";
     }
 
     public String createGame() throws ResponseException{
