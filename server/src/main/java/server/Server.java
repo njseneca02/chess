@@ -2,7 +2,10 @@ package server;
 
 import dataaccess.*;
 import handlers.*;
+import model.GameData;
 import spark.*;
+
+import javax.xml.crypto.Data;
 
 public class Server {
     private AuthDAO authDAO;
@@ -53,5 +56,30 @@ public class Server {
 
         Spark.put("/game", (req, res) ->
                 (new JoinGameHandler(authDAO, gameDAO).handleRequest(req, res)));
+    }
+
+    //methods for testing purposes
+
+    public void clearDatabases(){
+        try {
+            authDAO.clear();
+            userDAO.clear();
+            gameDAO.clear();
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public GameData getGame(){
+        try {
+            for (GameData game : gameDAO.listGames()) {
+                return game;
+            }
+        }
+        catch(DataAccessException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }
