@@ -14,14 +14,12 @@ import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
 public class ChessClient {
     private String visitorName = null;
     private final ServerFacade server;
-    private final String serverUrl;
     private State state = State.SIGNEDOUT;
     private String authToken;
     private HashMap<Integer, GameData> listOfGames = new HashMap<>();
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
-        this.serverUrl = serverUrl;
     }
 
     public String eval(String input) {
