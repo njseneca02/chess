@@ -13,8 +13,8 @@ public class ChessBoard {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final String EMPTY = "   ";
-    private static final String[] whiteHeaders = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
-    private static final String[] blackHeaders = {" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
+    private static final String[] WHITE_HEADERS = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
+    private static final String[] BLACK_HEADERS = {" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
 
 
     public static void main(String[] args) {
@@ -35,22 +35,22 @@ public class ChessBoard {
     }
 
     private static void drawWhiteBoard(PrintStream out, ChessPiece[][] chessBoard){
-        drawHeaders(out, whiteHeaders);
+        drawHeaders(out, WHITE_HEADERS);
 
         drawChessBoard(out, "white", chessBoard);
 
-        drawHeaders(out, whiteHeaders);
+        drawHeaders(out, WHITE_HEADERS);
 
         out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void drawBlackBoard(PrintStream out, ChessPiece[][] chessBoard){
-        drawHeaders(out, blackHeaders);
+        drawHeaders(out, BLACK_HEADERS);
 
         drawChessBoard(out, "black", chessBoard);
 
-        drawHeaders(out, blackHeaders);
+        drawHeaders(out, BLACK_HEADERS);
 
         out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);

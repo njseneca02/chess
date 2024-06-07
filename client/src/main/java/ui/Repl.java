@@ -30,11 +30,6 @@ public class Repl {
         System.out.println();
     }
 
-//    public void notify(Notification notification) {
-//        System.out.println(SET_TEXT_COLOR_RED + notification.message());
-//        printPrompt();
-//    }
-
     private void printPrompt() {
         if(client.isLoggedIn()) {
             System.out.print("\n" + SET_TEXT_COLOR_GREEN + client.getUsername() + " >>> ");

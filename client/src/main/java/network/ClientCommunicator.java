@@ -37,8 +37,7 @@ public class ClientCommunicator {
         return response;
     }
 
-
-    public String register(String urlString, String reqBody) throws IOException {
+    private String registerOrLogin(String urlString, String reqBody) throws IOException {
         URL url = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -54,6 +53,10 @@ public class ClientCommunicator {
         }
 
         return handleResponse(connection);
+    }
+
+    public String register(String urlString, String reqBody) throws IOException {
+        return registerOrLogin(urlString, reqBody);
     }
 
     public String listGames(String urlString, String authToken) throws IOException {
@@ -90,21 +93,7 @@ public class ClientCommunicator {
     }
 
     public String login(String urlString, String reqBody) throws IOException {
-        URL url = new URL(urlString);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setReadTimeout(5000);
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-
-        connection.connect();
-
-        try(OutputStream requestBody = connection.getOutputStream()) {
-            requestBody.write(reqBody.getBytes());
-        }
-
-        return handleResponse(connection);
+        return registerOrLogin(urlString, reqBody);
     }
 
     public String logout(String urlString, String authToken) throws IOException {
