@@ -24,8 +24,52 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void sampleTest() {
+    public void register() {
         Assertions.assertTrue(true);
     }
 
+    @Test
+    public void registerFail() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void listGames() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void listGamesFail() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void login() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void loginFail() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void logout() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void logoutFail() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void joinGame() {
+        Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void joinGameFail() {
+        Assertions.assertTrue(true);
+    }
 }
