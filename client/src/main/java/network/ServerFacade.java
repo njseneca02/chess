@@ -67,5 +67,23 @@ public class ServerFacade {
         }
     }
 
+    public String login(String username, String password) throws IOException{
+        LoginRequest reqBody = new LoginRequest(username, password);
+        Gson gson = new Gson();
+        try{
+            String json = communicator.register(serverUrl + "/session", gson.toJson(reqBody));
+            RegisterResult resBody = gson.fromJson(json, RegisterResult.class);
+            if(resBody.message() != null){
+                throw new IOException(resBody.message());
+            }
+            else{
+                return resBody.authToken();
+            }
+        }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
+
 
 }

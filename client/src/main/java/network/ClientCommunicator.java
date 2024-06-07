@@ -88,4 +88,22 @@ public class ClientCommunicator {
 
         return handleResponse(connection);
     }
+
+    public String login(String urlString, String reqBody) throws IOException {
+        URL url = new URL(urlString);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+
+        connection.connect();
+
+        try(OutputStream requestBody = connection.getOutputStream()) {
+            requestBody.write(reqBody.getBytes());
+        }
+
+        return handleResponse(connection);
+    }
 }

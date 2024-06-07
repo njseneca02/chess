@@ -1,5 +1,6 @@
 package client;
 
+import network.ServerFacade;
 import org.junit.jupiter.api.*;
 import server.Server;
 
@@ -13,6 +14,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
+        ServerFacade facade = new ServerFacade("http://localhost:" + port);
     }
 
     @AfterAll

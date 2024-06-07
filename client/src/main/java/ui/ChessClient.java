@@ -69,7 +69,21 @@ public class ChessClient {
     }
 
     public String login() throws ResponseException{
-        return null;
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "username: ");
+        String username = scanner.nextLine();
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "password: ");
+        String password = scanner.nextLine();
+
+        try{
+            authToken = server.login(username, password);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        state = State.SIGNEDIN;
+        visitorName = username;
+        return "Logged in as " + username;
     }
 
     public String register() throws ResponseException{
