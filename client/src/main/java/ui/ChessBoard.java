@@ -28,31 +28,37 @@ public class ChessBoard {
         drawBlackBoard(out, reverseBoard(startingBoard));
     }
 
+    public static void drawBoards(ChessPiece[][] chessBoard){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        drawWhiteBoard(out, chessBoard);
+        drawBlackBoard(out, reverseBoard(chessBoard));
+    }
+
     private static void drawWhiteBoard(PrintStream out, ChessPiece[][] chessBoard){
         drawHeaders(out, whiteHeaders);
 
-        drawTicTacToeBoard(out, "white", chessBoard);
+        drawChessBoard(out, "white", chessBoard);
 
         drawHeaders(out, whiteHeaders);
 
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void drawBlackBoard(PrintStream out, ChessPiece[][] chessBoard){
         drawHeaders(out, blackHeaders);
 
-        drawTicTacToeBoard(out, "black", chessBoard);
+        drawChessBoard(out, "black", chessBoard);
 
         drawHeaders(out, blackHeaders);
 
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void drawHeaders(PrintStream out, String[] headers) {
 
-        setBlack(out);
+
         out.print(EMPTY);
         for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
             drawHeader(out, headers[boardCol]);
@@ -66,15 +72,14 @@ public class ChessBoard {
     }
 
     private static void printHeaderText(PrintStream out, String player) {
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(RESET_BG_COLOR);
         out.print(SET_TEXT_COLOR_GREEN);
 
         out.print(player);
 
-        setBlack(out);
     }
 
-    private static void drawTicTacToeBoard(PrintStream out, String team, ChessPiece[][] chessBoard) {
+    private static void drawChessBoard(PrintStream out, String team, ChessPiece[][] chessBoard) {
         int rowId;
         if(team == "black"){
             rowId = 1;
@@ -83,7 +88,7 @@ public class ChessBoard {
             rowId = 8;
         }
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow) {
-            out.print(SET_BG_COLOR_BLACK);
+            out.print(RESET_BG_COLOR);
             out.print(SET_TEXT_COLOR_GREEN);
             out.print(" " + rowId + " ");
             if(boardRow % 2 == 1) {
@@ -92,7 +97,7 @@ public class ChessBoard {
             else {
                 drawRowOfSquaresWhite(out, chessBoard[boardRow]);
             }
-            out.print(SET_BG_COLOR_BLACK);
+            out.print(RESET_BG_COLOR);
             out.print(SET_TEXT_COLOR_GREEN);
             out.print(" " + rowId + " ");
             out.println();
@@ -117,7 +122,6 @@ public class ChessBoard {
                 }
                 printPieceConverter(out, row[boardCol]);
 
-                setBlack(out);
             }
 
         }
@@ -133,7 +137,6 @@ public class ChessBoard {
             }
             printPieceConverter(out, row[boardCol]);
 
-            setBlack(out);
         }
     }
 
@@ -143,30 +146,9 @@ public class ChessBoard {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
-    private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_BLACK);
-    }
-
     private static void setBlue(PrintStream out){
         out.print(SET_BG_COLOR_BLUE);
         out.print(SET_TEXT_COLOR_BLUE);
-    }
-
-    private static void printPlayer(PrintStream out, String player) {
-        out.print(SET_TEXT_COLOR_BLACK);
-
-        out.print(player);
-
-        setWhite(out);
-    }
-
-    private static void printPlayerWhite(PrintStream out, String player) {
-        out.print(SET_TEXT_COLOR_RED);
-
-        out.print(player);
-
-        setWhite(out);
     }
 
     private static void printPieceConverter(PrintStream out, ChessPiece piece){

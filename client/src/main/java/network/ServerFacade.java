@@ -1,5 +1,6 @@
 package network;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 import network.request.*;
@@ -72,7 +73,7 @@ public class ServerFacade {
         Gson gson = new Gson();
         try{
             String json = communicator.login(serverUrl + "/session", gson.toJson(reqBody));
-            RegisterResult resBody = gson.fromJson(json, RegisterResult.class);
+            LoginResult resBody = gson.fromJson(json, LoginResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
             }
@@ -89,7 +90,29 @@ public class ServerFacade {
         Gson gson = new Gson();
         try{
             String json = communicator.logout(serverUrl + "/session", authToken);
-            ListGameResult resBody = gson.fromJson(json, ListGameResult.class);
+            NoBodyResult resBody = gson.fromJson(json, NoBodyResult.class);
+            if(resBody.message() != null){
+                throw new IOException(resBody.message());
+            }
+        }
+        catch(IOException e){
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    public void joinGame(GameData game, String username, String authToken, String teamColor) throws IOException{
+        Gson gson = new Gson();
+        JoinGameRequest reqBody;
+        if(teamColor == "white"){
+            reqBody = new JoinGameRequest(ChessGame.TeamColor.WHITE, String.valueOf(game.gameID()));
+        }
+        else{
+            reqBody = new JoinGameRequest(ChessGame.TeamColor.BLACK, String.valueOf(game.gameID()));
+        }
+
+        try{
+            String json = communicator.joinGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
+            NoBodyResult resBody = gson.fromJson(json, NoBodyResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
             }

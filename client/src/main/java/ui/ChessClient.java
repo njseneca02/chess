@@ -17,7 +17,7 @@ public class ChessClient {
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
     private String authToken;
-    private HashMap<Integer, String> listOfGames = new HashMap<>();
+    private HashMap<Integer, GameData> listOfGames = new HashMap<>();
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -140,7 +140,7 @@ public class ChessClient {
             int i = 1;
             for(GameData game: games){
                 String data = i + " - " + game.gameName() + " White: " + game.whiteUsername() + " Black: " + game.blackUsername();
-                listOfGames.put(i, data);
+                listOfGames.put(i, game);
                 i++;
                 result += data + "\n";
             }
@@ -152,7 +152,22 @@ public class ChessClient {
     }
 
     public String joinGame() throws ResponseException{
-        return null;
+        assertSignedIn();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game number: ");
+        String gameId = scanner.nextLine();
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter team color (white or black): ");
+        String teamColor = scanner.nextLine().trim().toLowerCase();
+        GameData game = listOfGames.get(Integer.parseInt(gameId));
+        try {
+            server.joinGame(game, visitorName, authToken, teamColor);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        ChessBoard.drawBoards(game.game().getBoard().getChessBoard());
+        return "Success!";
+
     }
 
     public String observeGame() throws ResponseException{

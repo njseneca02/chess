@@ -121,5 +121,24 @@ public class ClientCommunicator {
         return handleResponse(connection);
     }
 
+    public String joinGame(String urlString, String reqBody, String authToken) throws IOException {
+        URL url = new URL(urlString);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("PUT");
+        connection.addRequestProperty("Authorization", authToken);
+        connection.setDoOutput(true);
+
+        connection.connect();
+
+        try(OutputStream requestBody = connection.getOutputStream()) {
+            requestBody.write(reqBody.getBytes());
+        }
+
+        return handleResponse(connection);
+    }
+
 
 }
