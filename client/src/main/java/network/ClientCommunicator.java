@@ -6,32 +6,28 @@ import java.net.URL;
 
 public class ClientCommunicator {
 
-    private String handleResponse(HttpURLConnection connection) throws IOException{
+    private void read(InputStream responseBody, String response) throws IOException{
+        BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            response += line;
+        }
+
+        reader.close();
+    }
+
+    private String handleResponse(HttpURLConnection connection) throws IOException {
         String response = "";
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK ) {
-            try(InputStream responseBody = connection.getInputStream()){
-                BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    response += line;
-                }
-
-                reader.close();
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            try (InputStream responseBody = connection.getInputStream()) {
+                read(responseBody, response);
             }
-
         }
         else {
-            try(InputStream responseBody = connection.getErrorStream()){
-                BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    response += line;
-                }
-
-                reader.close();
+            try (InputStream responseBody = connection.getErrorStream()) {
+                read(responseBody, response);
             }
         }
         return response;
