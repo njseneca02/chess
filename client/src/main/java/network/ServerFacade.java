@@ -100,7 +100,7 @@ public class ServerFacade {
         }
     }
 
-    public void joinGame(GameData game, String username, String authToken, String teamColor) throws IOException{
+    public void joinGame(GameData game, String authToken, String teamColor) throws IOException{
         Gson gson = new Gson();
         JoinGameRequest reqBody;
         if(teamColor.equals("white")){
@@ -121,6 +121,5 @@ public class ServerFacade {
             throw new IOException(e.getMessage());
         }
     }
-
 
 }

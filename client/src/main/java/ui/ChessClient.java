@@ -160,7 +160,7 @@ public class ChessClient {
         String teamColor = scanner.nextLine().trim().toLowerCase();
         GameData game = listOfGames.get(Integer.parseInt(gameId));
         try {
-            server.joinGame(game, visitorName, authToken, teamColor);
+            server.joinGame(game, authToken, teamColor);
         }
         catch(IOException e){
             return e.getMessage();
@@ -171,7 +171,15 @@ public class ChessClient {
     }
 
     public String observeGame() throws ResponseException{
-        return null;
+        assertSignedIn();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game number: ");
+        String gameId = scanner.nextLine();
+        GameData game = listOfGames.get(Integer.parseInt(gameId));
+
+        ChessBoard.drawBoards(game.game().getBoard().getChessBoard());
+        return "Success!";
+
     }
 
     private void assertSignedIn() throws ResponseException {
@@ -181,12 +189,7 @@ public class ChessClient {
     }
 
     public boolean isLoggedIn(){
-        if(state == State.SIGNEDOUT){
-            return false;
-        }
-        else{
-        return true;
-        }
+        return state != State.SIGNEDOUT;
     }
 
     public String getUsername(){
