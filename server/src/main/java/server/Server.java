@@ -11,11 +11,13 @@ public class Server {
     private AuthDAO authDAO;
     private GameDAO gameDAO;
     private UserDAO userDAO;
+    private WebSocketHandler
 
     public Server(){
         this.authDAO = new SQLAuthDAO();
         this.gameDAO = new SQLGameDAO();
         this.userDAO = new SQLUserDAO();
+
     }
 
     public int run(int desiredPort) {
