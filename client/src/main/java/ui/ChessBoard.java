@@ -92,10 +92,10 @@ public class ChessBoard {
             out.print(SET_TEXT_COLOR_GREEN);
             out.print(" " + rowId + " ");
             if(boardRow % 2 == 1) {
-                drawRowOfSquaresBlue(out, chessBoard[boardRow]);
+                drawRowOfSquaresBlue(out, chessBoard[7 - boardRow]);
             }
             else {
-                drawRowOfSquaresWhite(out, chessBoard[boardRow]);
+                drawRowOfSquaresWhite(out, chessBoard[7 - boardRow]);
             }
             out.print(RESET_BG_COLOR);
             out.print(SET_TEXT_COLOR_GREEN);
