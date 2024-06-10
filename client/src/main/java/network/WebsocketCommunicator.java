@@ -1,7 +1,8 @@
-package ui.websocket;
+package network;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import ui.NotificationHandler;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
@@ -9,12 +10,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class WebSocketFacade extends Endpoint {
+public class WebsocketCommunicator extends Endpoint {
 
     Session session;
     NotificationHandler notificationHandler;
 
-    public WebSocketFacade(String url, NotificationHandler notificationHandler) throws ResponseException {
+    public WebsocketCommunicator(NotificationHandler notificationHandler, String url) throws ResponseException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");

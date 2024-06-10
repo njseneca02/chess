@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ClientCommunicator {
+public class HttpCommunicator {
 
     private String read(InputStream responseBody) throws IOException{
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseBody));

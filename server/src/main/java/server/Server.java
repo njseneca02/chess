@@ -6,8 +6,6 @@ import model.GameData;
 import server.websocket.WebSocketHandler;
 import spark.*;
 
-import javax.xml.crypto.Data;
-
 public class Server {
     private AuthDAO authDAO;
     private GameDAO gameDAO;

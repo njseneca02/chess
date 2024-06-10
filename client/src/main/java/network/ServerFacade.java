@@ -2,9 +2,11 @@ package network;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import exception.ResponseException;
 import model.GameData;
 import network.request.*;
 import network.result.*;
+import ui.ChessClient;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,16 +15,24 @@ public class ServerFacade {
 
     private final String serverUrl;
 
-    private ClientCommunicator communicator = new ClientCommunicator();
-    public ServerFacade(String serverUrl){
+    private HttpCommunicator httpCommunicator = new HttpCommunicator();
+    private WebsocketCommunicator websocketCommunicator;
+
+    public ServerFacade(ChessClient client, String serverUrl){
         this.serverUrl = serverUrl;
+        try{
+            websocketCommunicator = new WebsocketCommunicator(client, this.serverUrl);
+        }
+        catch(ResponseException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public String register(String username, String password, String email) throws IOException{
         RegisterRequest reqBody = new RegisterRequest(username, password, email);
         Gson gson = new Gson();
         try{
-            String json = communicator.register(serverUrl + "/user", gson.toJson(reqBody));
+            String json = httpCommunicator.register(serverUrl + "/user", gson.toJson(reqBody));
             RegisterResult resBody = gson.fromJson(json, RegisterResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
@@ -39,7 +49,7 @@ public class ServerFacade {
     public Collection<GameData> listGames(String authToken) throws IOException{
         Gson gson = new Gson();
         try{
-            String json = communicator.listGames(serverUrl + "/game", authToken);
+            String json = httpCommunicator.listGames(serverUrl + "/game", authToken);
             ListGameResult resBody = gson.fromJson(json, ListGameResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
@@ -57,7 +67,7 @@ public class ServerFacade {
         Gson gson = new Gson();
         CreateGameRequest reqBody = new CreateGameRequest(gameName);
         try{
-            String json = communicator.createGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
+            String json = httpCommunicator.createGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
             CreateGameResult resBody = gson.fromJson(json, CreateGameResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
@@ -72,7 +82,7 @@ public class ServerFacade {
         LoginRequest reqBody = new LoginRequest(username, password);
         Gson gson = new Gson();
         try{
-            String json = communicator.login(serverUrl + "/session", gson.toJson(reqBody));
+            String json = httpCommunicator.login(serverUrl + "/session", gson.toJson(reqBody));
             LoginResult resBody = gson.fromJson(json, LoginResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
@@ -89,7 +99,7 @@ public class ServerFacade {
     public void logout(String authToken) throws IOException{
         Gson gson = new Gson();
         try{
-            String json = communicator.logout(serverUrl + "/session", authToken);
+            String json = httpCommunicator.logout(serverUrl + "/session", authToken);
             NoBodyResult resBody = gson.fromJson(json, NoBodyResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
@@ -111,7 +121,7 @@ public class ServerFacade {
         }
 
         try{
-            String json = communicator.joinGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
+            String json = httpCommunicator.joinGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
             NoBodyResult resBody = gson.fromJson(json, NoBodyResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());

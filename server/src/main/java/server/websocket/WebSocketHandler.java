@@ -4,7 +4,11 @@ import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,29 +45,30 @@ public class WebSocketHandler {
                 case LEAVE -> leave(session, username, (LeaveGameCommand) command);
                 case RESIGN -> resign(session, username, (ResignCommand) command);
             }
-        } catch (UnauthorizedException ex) {
-            sendMessage(session.getRemote(), new ErrorMessage("Error: unauthorized"));
         } catch (Exception ex) {
             ex.printStackTrace();
-            sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
+            sendMessage(session, new ErrorMessage("Error: " + ex.getMessage()));
         }
     }
 
 
-    private void connect(Session session, String username, ConnectCommand command){
-
+    private void connect(Session session, String username, ConnectCommand command) throws IOException{
+        sendMessage(session, new NotificationMessage("msg"));
     }
 
-    private void makeMove(Session session, String username, MakeMoveCommand command){
-
+    private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException{
+        sendMessage(session, new LoadGameMessage("msg"));
+        sendMessage(session, new NotificationMessage("msg"));
     }
 
-    private void resign(Session session, String username, LeaveGameCommand command){
-
+    private void resign(Session session, String username, ResignCommand command) throws IOException{
+        sendMessage(session, new NotificationMessage("msg"));
+        sendMessage(session, new LoadGameMessage("msg"));
     }
 
-    private void leave(Session session, String username, ResignCommand command){
-
+    private void leave(Session session, String username, LeaveGameCommand command) throws IOException{
+        sendMessage(session, new NotificationMessage("msg"));
+        sendMessage(session, new LoadGameMessage("msg"));
     }
 
     private String getUsername(String authToken){
@@ -72,5 +77,9 @@ public class WebSocketHandler {
 
     private void saveSession(String id, Session session){
         sessions.put(id, session);
+    }
+
+    private void sendMessage(Session session, ServerMessage serverMessage) throws IOException{
+        session.getRemote().sendString(new Gson().toJson(serverMessage));
     }
 }

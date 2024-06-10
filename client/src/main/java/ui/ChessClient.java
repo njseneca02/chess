@@ -3,6 +3,7 @@ package ui;
 import exception.ResponseException;
 import model.GameData;
 import network.ServerFacade;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
 
-public class ChessClient {
+public class ChessClient implements NotificationHandler{
     private String visitorName = null;
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
@@ -19,7 +20,7 @@ public class ChessClient {
     private HashMap<Integer, GameData> listOfGames = new HashMap<>();
 
     public ChessClient(String serverUrl) {
-        server = new ServerFacade(serverUrl);
+        server = new ServerFacade(this, serverUrl);
     }
 
     public String eval(String input) {
@@ -192,6 +193,10 @@ public class ChessClient {
 
     public String getUsername(){
         return visitorName;
+    }
+
+    public void notify(ServerMessage serverMessage){
+
     }
 
 }

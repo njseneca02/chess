@@ -25,12 +25,16 @@ public class UserGameCommand {
 
     private final String authToken;
 
-    public String getAuthString() {
+    public String getAuthString(){
         return authToken;
     }
 
     public CommandType getCommandType() {
         return this.commandType;
+    }
+
+    public String getGameID(){
+        return "1";
     }
 
     @Override
@@ -48,3 +52,4 @@ public class UserGameCommand {
         return Objects.hash(getCommandType(), getAuthString());
     }
 }
+
