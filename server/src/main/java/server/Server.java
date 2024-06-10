@@ -3,6 +3,7 @@ package server;
 import dataaccess.*;
 import handlers.*;
 import model.GameData;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 import javax.xml.crypto.Data;
@@ -11,7 +12,7 @@ public class Server {
     private AuthDAO authDAO;
     private GameDAO gameDAO;
     private UserDAO userDAO;
-    private WebSocketHandler
+    private WebSocketHandler ws;
 
     public Server(){
         this.authDAO = new SQLAuthDAO();
