@@ -25,6 +25,8 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        Spark.webSocket("/ws", WebSocketHandler.class);
+
         registerEndpoints();
 
         Spark.awaitInitialization();

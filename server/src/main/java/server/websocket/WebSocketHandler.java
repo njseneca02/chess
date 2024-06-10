@@ -1,6 +1,8 @@
 package server.websocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -22,28 +24,16 @@ public class WebSocketHandler {
     public void onMessage(Session session, String msg) throws Exception {
         try {
             UserGameCommand command = new Gson().fromJson(msg, UserGameCommand.class);
-            if(command.getCommandType() == UserGameCommand.CommandType.CONNECT){
-                command = new Gson().fromJson(msg, ConnectCommand.class);
-            }
-            else if(command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE){
-                command = new Gson().fromJson(msg, MakeMoveCommand.class);
-            }
-            else if(command.getCommandType() == UserGameCommand.CommandType.LEAVE){
-                command = new Gson().fromJson(msg, LeaveGameCommand.class);
-            }
-            else if(command.getCommandType() == UserGameCommand.CommandType.RESIGN){
-                command = new Gson().fromJson(msg, ResignCommand.class);
-            }
 
             String username = getUsername(command.getAuthString());
 
             saveSession(command.getGameID(), session);
 
             switch (command.getCommandType()) {
-                case CONNECT -> connect(session, username, (ConnectCommand) command);
-                case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
-                case LEAVE -> leave(session, username, (LeaveGameCommand) command);
-                case RESIGN -> resign(session, username, (ResignCommand) command);
+                case CONNECT -> connect(session, username, new Gson().fromJson(msg, ConnectCommand.class));
+                case MAKE_MOVE -> makeMove(session, username, new Gson().fromJson(msg, MakeMoveCommand.class));
+                case LEAVE -> leave(session, username, new Gson().fromJson(msg, LeaveGameCommand.class));
+                case RESIGN -> resign(session, username, new Gson().fromJson(msg, ResignCommand.class));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -53,22 +43,22 @@ public class WebSocketHandler {
 
 
     private void connect(Session session, String username, ConnectCommand command) throws IOException{
-        sendMessage(session, new NotificationMessage("msg"));
+        sendMessage(session, new LoadGameMessage((new GameData(3, null, null, "game", new ChessGame())), null));
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException{
-        sendMessage(session, new LoadGameMessage("msg"));
+        //sendMessage(session, new LoadGameMessage("msg"));
         sendMessage(session, new NotificationMessage("msg"));
     }
 
     private void resign(Session session, String username, ResignCommand command) throws IOException{
         sendMessage(session, new NotificationMessage("msg"));
-        sendMessage(session, new LoadGameMessage("msg"));
+       // sendMessage(session, new LoadGameMessage("msg"));
     }
 
     private void leave(Session session, String username, LeaveGameCommand command) throws IOException{
         sendMessage(session, new NotificationMessage("msg"));
-        sendMessage(session, new LoadGameMessage("msg"));
+      //  sendMessage(session, new LoadGameMessage("msg"));
     }
 
     private String getUsername(String authToken){

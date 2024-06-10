@@ -21,7 +21,7 @@ public class ServerFacade {
     public ServerFacade(ChessClient client, String serverUrl){
         this.serverUrl = serverUrl;
         try{
-            websocketCommunicator = new WebsocketCommunicator(client, this.serverUrl);
+            this.websocketCommunicator = new WebsocketCommunicator(client, this.serverUrl);
         }
         catch(ResponseException e){
             System.out.println(e.getMessage());
