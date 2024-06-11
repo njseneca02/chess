@@ -123,9 +123,18 @@ public class WebSocketHandler {
        // sendMessage(session, new LoadGameMessage("msg"));
     }
 
-    private void leave(Session session, String username, LeaveGameCommand command) throws IOException{
-        sendMessage(session, new NotificationMessage("msg"));
-      //  sendMessage(session, new LoadGameMessage("msg"));
+    private void leave(Session session, String username, LeaveGameCommand command) throws Exception{
+        GameData game = gameDAO.getGame(command.getGameID());
+        if(game.blackUsername() != null && game.blackUsername().equals(username)){
+            gameDAO.updatePlayer(command.getGameID(), null, ChessGame.TeamColor.BLACK);
+        }
+        else if(game.whiteUsername() != null && game.whiteUsername().equals(username)){
+            gameDAO.updatePlayer(command.getGameID(), null, ChessGame.TeamColor.WHITE);
+        }
+        sessions.get(command.getGameID()).remove(session);
+        for(Session sess : sessions.get(command.getGameID())){
+            sendMessage(sess, new NotificationMessage(username + " has left the game"));
+        }
     }
 
     private String getUsername(String authToken) throws DataAccessException {
