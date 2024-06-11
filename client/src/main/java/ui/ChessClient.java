@@ -28,6 +28,7 @@ public class ChessClient implements NotificationHandler{
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
 
+            //add more cases here for the post game gui
             return switch (cmd) {
                 case "help" -> help();
                 case "login" -> login();
@@ -195,8 +196,10 @@ public class ChessClient implements NotificationHandler{
         return visitorName;
     }
 
-    public void notify(ServerMessage serverMessage){
+    //add code for the post game ui and then correlating calls to serverfacade (join game, make move, highlight moves,
 
+    public void notify(ServerMessage serverMessage){
+//switch case to handle each server message and take care of code aqccordingly
     }
 
 }

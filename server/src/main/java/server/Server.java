@@ -10,7 +10,6 @@ public class Server {
     private AuthDAO authDAO;
     private GameDAO gameDAO;
     private UserDAO userDAO;
-    private WebSocketHandler ws;
 
     public Server(){
         this.authDAO = new SQLAuthDAO();
@@ -25,7 +24,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.webSocket("/ws", new WebSocketHandler(authDAO, gameDAO, userDAO));
 
         registerEndpoints();
 

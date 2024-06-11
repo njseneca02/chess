@@ -2,15 +2,21 @@ package server.websocket;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import service.*;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,6 +25,15 @@ import java.util.HashMap;
 public class WebSocketHandler {
 
     private HashMap<String, Session> sessions = new HashMap<>();
+    AuthDAO authDAO;
+    GameDAO gameDAO;
+    UserDAO userDAO;
+
+    public WebSocketHandler(AuthDAO authDAO, GameDAO gameDAO, UserDAO userDAO){
+        this.authDAO = authDAO;
+        this.gameDAO = gameDAO;
+        this.userDAO = userDAO;
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws Exception {
@@ -43,7 +58,8 @@ public class WebSocketHandler {
 
 
     private void connect(Session session, String username, ConnectCommand command) throws IOException{
-        sendMessage(session, new LoadGameMessage((new GameData(3, null, null, "game", new ChessGame())), null));
+        sendMessage(session, new LoadGameMessage((new GameData(3, null, null, "game", new ChessGame()))));
+        sendMessage(session, new NotificationMessage("msg"));
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException{
@@ -61,8 +77,8 @@ public class WebSocketHandler {
       //  sendMessage(session, new LoadGameMessage("msg"));
     }
 
-    private String getUsername(String authToken){
-        return null;
+    private String getUsername(String authToken) throws DataAccessException {
+        return authDAO.getAuth(authToken).username();
     }
 
     private void saveSession(String id, Session session){
