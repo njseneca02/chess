@@ -3,6 +3,9 @@ package ui;
 import exception.ResponseException;
 import model.GameData;
 import network.ServerFacade;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -10,7 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import static ui.EscapeSequences.SET_TEXT_COLOR_GREEN;
+import static ui.EscapeSequences.*;
 
 public class ChessClient implements NotificationHandler{
     private String visitorName = null;
@@ -198,8 +201,25 @@ public class ChessClient implements NotificationHandler{
 
     //add code for the post game ui and then correlating calls to serverfacade (join game, make move, highlight moves,
 
+    private void errorNotify(ErrorMessage message){
+        System.out.println(SET_TEXT_COLOR_RED + message.getMessage());
+    }
+
+    private void notificationNotify(NotificationMessage message){
+        System.out.println(SET_TEXT_COLOR_GREEN + message.getMessage());
+    }
+
+    private void loadGameNotify(LoadGameMessage message){
+
+    }
+
     public void notify(ServerMessage serverMessage){
 //switch case to handle each server message and take care of code aqccordingly
+        switch(serverMessage.getServerMessageType()){
+            case ERROR -> errorNotify((ErrorMessage) serverMessage);
+            case NOTIFICATION -> notificationNotify((NotificationMessage) serverMessage);
+            case LOAD_GAME -> loadGameNotify((LoadGameMessage) serverMessage);
+        }
     }
 
 }

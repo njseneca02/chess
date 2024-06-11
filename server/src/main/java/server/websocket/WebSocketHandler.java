@@ -20,11 +20,12 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 @WebSocket
 public class WebSocketHandler {
 
-    private HashMap<String, Session> sessions = new HashMap<>();
+    private HashMap<Integer, HashSet<Session>> sessions = new HashMap<>();
     AuthDAO authDAO;
     GameDAO gameDAO;
     UserDAO userDAO;
@@ -57,9 +58,24 @@ public class WebSocketHandler {
     }
 
 
-    private void connect(Session session, String username, ConnectCommand command) throws IOException{
-        sendMessage(session, new LoadGameMessage((new GameData(3, null, null, "game", new ChessGame()))));
-        sendMessage(session, new NotificationMessage("msg"));
+    private void connect(Session session, String username, ConnectCommand command) throws Exception{
+        sendMessage(session, new LoadGameMessage(gameDAO.getGame(command.getGameID())));
+        for(Session sess : sessions.get(command.getGameID())){
+            if(!sess.equals(session)){
+                if(command.getColor() == null){
+                    sendMessage(sess, new NotificationMessage(username + " joined as observer"));
+                }
+                else {
+                    if(command.getColor() == ChessGame.TeamColor.WHITE){
+                        sendMessage(sess, new NotificationMessage(username + " joined as white player"));
+                    }
+                    else{
+                        sendMessage(sess, new NotificationMessage(username + "joined as black player"));
+                    }
+                }
+            }
+        }
+
     }
 
     private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException{
@@ -81,8 +97,13 @@ public class WebSocketHandler {
         return authDAO.getAuth(authToken).username();
     }
 
-    private void saveSession(String id, Session session){
-        sessions.put(id, session);
+    public void saveSession(int key, Session session) {
+        HashSet<Session> sessionSet = sessions.get(key);
+        if (sessionSet == null) {
+            sessionSet = new HashSet<>();
+            sessions.put(key, sessionSet);
+        }
+        sessionSet.add(session);
     }
 
     private void sendMessage(Session session, ServerMessage serverMessage) throws IOException{

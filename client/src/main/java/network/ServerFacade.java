@@ -7,6 +7,7 @@ import model.GameData;
 import network.request.*;
 import network.result.*;
 import ui.ChessClient;
+import websocket.commands.ConnectCommand;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -113,16 +114,24 @@ public class ServerFacade {
     public void joinGame(GameData game, String authToken, String teamColor) throws IOException{
         Gson gson = new Gson();
         JoinGameRequest reqBody;
+        ConnectCommand command;
         if(teamColor.equals("white")){
             reqBody = new JoinGameRequest(ChessGame.TeamColor.WHITE, String.valueOf(game.gameID()));
+            command = new ConnectCommand(authToken, game.gameID(), ChessGame.TeamColor.WHITE);
+        }
+        else if(teamColor.equals("black")){
+            reqBody = new JoinGameRequest(ChessGame.TeamColor.BLACK, String.valueOf(game.gameID()));
+            command = new ConnectCommand(authToken, game.gameID(), ChessGame.TeamColor.BLACK);
         }
         else{
-            reqBody = new JoinGameRequest(ChessGame.TeamColor.BLACK, String.valueOf(game.gameID()));
+            reqBody = new JoinGameRequest(null, String.valueOf(game.gameID()));
+            command = new ConnectCommand(authToken, game.gameID(), null);
         }
 
         try{
-            String json = httpCommunicator.joinGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
-            NoBodyResult resBody = gson.fromJson(json, NoBodyResult.class);
+            String httpJson = httpCommunicator.joinGame(serverUrl + "/game", gson.toJson(reqBody), authToken);
+            websocketCommunicator.send(gson.toJson(command));
+            NoBodyResult resBody = gson.fromJson(httpJson, NoBodyResult.class);
             if(resBody.message() != null){
                 throw new IOException(resBody.message());
             }

@@ -46,7 +46,7 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     //use this in methods or whatever that serverfacade can use to send relevant UserCommands to server when making move, joining game, etc.
-    public void send(String msg) throws Exception {
+    public void send(String msg) throws IOException {
         this.session.getBasicRemote().sendText(msg);
     }
 
