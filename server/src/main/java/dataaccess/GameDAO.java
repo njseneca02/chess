@@ -17,4 +17,6 @@ public interface GameDAO {
 
     public void updatePlayer(int id, String username, ChessGame.TeamColor color) throws DataAccessException;
 
+    public void updateGame(int id, ChessGame game) throws DataAccessException;
+
 }

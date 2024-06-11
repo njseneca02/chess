@@ -210,7 +210,7 @@ public class ChessClient implements NotificationHandler{
     }
 
     private void loadGameNotify(LoadGameMessage message){
-
+        ChessBoard.drawBoards(message.getGame().getBoard().getChessBoard());
     }
 
     public void notify(ServerMessage serverMessage){
