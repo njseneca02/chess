@@ -31,7 +31,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameCreate(){
-        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        GameData g = new GameData(5, null, null, "gameName", false, new ChessGame());
         int id = 0;
         try {
             id = gameDAO.createGame(g);
@@ -44,7 +44,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameCreateFail(){
-        GameData g = new GameData(5, null, null, null, new ChessGame());
+        GameData g = new GameData(5, null, null, null, false, new ChessGame());
         int id = 0;
         try {
             id = gameDAO.createGame(g);
@@ -57,7 +57,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameGet(){
-        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        GameData g = new GameData(5, null, null, "gameName", false, new ChessGame());
         int id = 0;
         String test = null;
         try {
@@ -72,7 +72,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameGetFail(){
-        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        GameData g = new GameData(5, null, null, "gameName", false, new ChessGame());
         String test = null;
         try {
             gameDAO.createGame(g);
@@ -91,9 +91,9 @@ public class DataAccessTests {
 
     @Test
     public void testGameList(){
-        GameData g1 = new GameData(5, null, null, "gameName1", new ChessGame());
-        GameData g2 = new GameData(6, null, null, "gameName2", new ChessGame());
-        GameData g3 = new GameData(7, null, null, "gameName3", new ChessGame());
+        GameData g1 = new GameData(5, null, null, "gameName1", false, new ChessGame());
+        GameData g2 = new GameData(6, null, null, "gameName2", false, new ChessGame());
+        GameData g3 = new GameData(7, null, null, "gameName3", false, new ChessGame());
         int size = 0;
         try {
             gameDAO.createGame(g1);
@@ -109,8 +109,8 @@ public class DataAccessTests {
 
     @Test
     public void testGameListFail(){
-        GameData g1 = new GameData(5, null, null, "gameName1", new ChessGame());
-        GameData g2 = new GameData(6, null, null, null, new ChessGame());
+        GameData g1 = new GameData(5, null, null, "gameName1", false, new ChessGame());
+        GameData g2 = new GameData(6, null, null, null, false, new ChessGame());
         int size = 0;
         try {
             gameDAO.createGame(g1);
@@ -126,7 +126,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameUpdatePlayer(){
-        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        GameData g = new GameData(5, null, null, "gameName",false,  new ChessGame());
         String test = null;
         try {
             int id = gameDAO.createGame(g);
@@ -141,7 +141,7 @@ public class DataAccessTests {
 
     @Test
     public void testGameUpdatePlayerFail(){
-        GameData g = new GameData(5, null, null, "gameName", new ChessGame());
+        GameData g = new GameData(5, null, null, "gameName", false, new ChessGame());
         String test = null;
         try {
             int id = gameDAO.createGame(g);
@@ -157,9 +157,9 @@ public class DataAccessTests {
 
     @Test
     public void testGameClear(){
-        GameData g1 = new GameData(5, null, null, "gameName1", new ChessGame());
-        GameData g2 = new GameData(6, null, null, "gameName2", new ChessGame());
-        GameData g3 = new GameData(7, null, null, "gameName3", new ChessGame());
+        GameData g1 = new GameData(5, null, null, "gameName1", false, new ChessGame());
+        GameData g2 = new GameData(6, null, null, "gameName2", false, new ChessGame());
+        GameData g3 = new GameData(7, null, null, "gameName3", false, new ChessGame());
         int size = 3;
         try {
             gameDAO.createGame(g1);

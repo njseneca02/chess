@@ -11,7 +11,6 @@ import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import service.*;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -118,9 +117,20 @@ public class WebSocketHandler {
         }
     }
 
-    private void resign(Session session, String username, ResignCommand command) throws IOException{
-        sendMessage(session, new NotificationMessage("msg"));
-       // sendMessage(session, new LoadGameMessage("msg"));
+    private void resign(Session session, String username, ResignCommand command) throws Exception{
+        GameData game = gameDAO.getGame(command.getGameID());
+        if(!(game.whiteUsername().equals(username) || game.blackUsername().equals(username))){
+            sendMessage(session, new ErrorMessage("cannot resign as observer"));
+        }
+        else if(game.gameComplete()){
+            sendMessage(session, new ErrorMessage("game is over"));
+        }
+        else {
+            gameDAO.updateGame(command.getGameID(), game.game(), true);
+            for (Session sess : sessions.get(command.getGameID())) {
+                sendMessage(sess, new NotificationMessage(username + " has resigned"));
+            }
+        }
     }
 
     private void leave(Session session, String username, LeaveGameCommand command) throws Exception{
@@ -155,9 +165,12 @@ public class WebSocketHandler {
     }
 
     private void processValidMove(Session session, GameData game, MakeMoveCommand command, boolean verifiedMove, String username) throws Exception{
-        if (verifiedMove) {
+        if(game.gameComplete()){
+            sendMessage(session, new ErrorMessage("Error: game is over"));
+        }
+        else if (verifiedMove) {
             game.game().makeMove(command.getMove());
-            gameDAO.updateGame(command.getGameID(), game.game());
+            gameDAO.updateGame(command.getGameID(), game.game(), game.gameComplete());
             for (Session sess : sessions.get(command.getGameID())) {
                 sendMessage(sess, new LoadGameMessage(game));
                 if (!sess.equals(session)) {

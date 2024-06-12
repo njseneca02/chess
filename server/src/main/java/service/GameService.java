@@ -52,7 +52,7 @@ public class GameService {
         }
 
         else if(auth != null){
-            int gameId = gameDAO.createGame(new GameData(0, null, null, request.gameName(), new ChessGame()));
+            int gameId = gameDAO.createGame(new GameData(0, null, null, request.gameName(), false, new ChessGame()));
             result = new CreateGameResult(null, String.valueOf(gameId));
         }
 

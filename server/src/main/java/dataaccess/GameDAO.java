@@ -4,7 +4,6 @@ import chess.ChessGame;
 import model.GameData;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 public interface GameDAO {
     public int createGame(GameData g) throws DataAccessException;
@@ -17,6 +16,6 @@ public interface GameDAO {
 
     public void updatePlayer(int id, String username, ChessGame.TeamColor color) throws DataAccessException;
 
-    public void updateGame(int id, ChessGame game) throws DataAccessException;
+    public void updateGame(int id, ChessGame game, boolean gameComplete) throws DataAccessException;
 
 }

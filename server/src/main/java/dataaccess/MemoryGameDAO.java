@@ -16,7 +16,7 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     public int createGame(GameData g) throws DataAccessException{
-        GameData addedId = new GameData(idCounter, g.whiteUsername(), g.blackUsername(), g.gameName(), g.game());
+        GameData addedId = new GameData(idCounter, g.whiteUsername(), g.blackUsername(), g.gameName(), false, g.game());
         database.put(addedId.gameID(), addedId);
         idCounter++;
         return idCounter - 1;
@@ -34,10 +34,10 @@ public class MemoryGameDAO implements GameDAO{
         GameData oldGame = database.get(id);
         GameData newGame;
         if(color == ChessGame.TeamColor.WHITE){
-            newGame = new GameData(id, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+            newGame = new GameData(id, username, oldGame.blackUsername(), oldGame.gameName(), oldGame.gameComplete(), oldGame.game());
         }
         else{
-            newGame = new GameData(id, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game());
+            newGame = new GameData(id, oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.gameComplete(), oldGame.game());
         }
         database.replace(id, oldGame, newGame);
 
@@ -47,7 +47,7 @@ public class MemoryGameDAO implements GameDAO{
         database.clear();
     }
 
-    public void updateGame(int id, ChessGame game) throws DataAccessException{
+    public void updateGame(int id, ChessGame game, boolean gameComplete) throws DataAccessException{
 
     }
 

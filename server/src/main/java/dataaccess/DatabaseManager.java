@@ -40,6 +40,7 @@ public class DatabaseManager {
                     whiteUsername varchar(255),
                     blackUsername varchar(255),
                     gameName varchar(255) not null,
+                    gameComplete boolean default 0,
                     chessGame varchar(4095) not null
                     ) auto_increment = 1;
                     """;

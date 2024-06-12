@@ -47,7 +47,7 @@ public class ServiceUnitTests {
         Collection<AuthData> auth = null;
         try{
             authDAO.createAuth(new AuthData("hello", "nathan"));
-            gameDAO.createGame(new GameData(1, "a", "b", "game", new ChessGame()));
+            gameDAO.createGame(new GameData(1, "a", "b", "game", false, new ChessGame()));
             userDAO.createUser(new UserData("n", "pass", "email"));
             utilService.clearDatabase();
             game = gameDAO.listGames();
