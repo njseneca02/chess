@@ -52,7 +52,7 @@ public class ChessClient implements NotificationHandler{
                 case "redraw" -> redraw();
                 case "leave" -> leave();
                 case "mm" -> makeMove();
-//                case "resign" -> resign();
+                case "resign" -> resign();
 //                case "highlight" -> highlightMoves();
                 case "quit" -> "quit";
                 default -> help();
@@ -60,6 +60,18 @@ public class ChessClient implements NotificationHandler{
         } catch (ResponseException ex) {
             return ex.getMessage();
         }
+    }
+
+    public String resign() throws ResponseException{
+        assertSignedIn();
+        assertInGame();
+        try {
+            server.resign(authToken, myGame.gameID());
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        return "";
     }
 
     public String leave() throws ResponseException{

@@ -11,6 +11,7 @@ import ui.ChessClient;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveGameCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.ResignCommand;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -155,6 +156,12 @@ public class ServerFacade {
     public void makeMove(String authToken, int gameID, ChessMove move) throws IOException{
         Gson gson = new Gson();
         MakeMoveCommand command = new MakeMoveCommand(authToken, gameID, move);
+        websocketCommunicator.send(gson.toJson(command));
+    }
+
+    public void resign(String authToken, int gameID) throws IOException{
+        Gson gson = new Gson();
+        ResignCommand command = new ResignCommand(authToken, gameID);
         websocketCommunicator.send(gson.toJson(command));
     }
 

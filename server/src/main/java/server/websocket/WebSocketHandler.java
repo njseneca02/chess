@@ -195,6 +195,7 @@ public class WebSocketHandler {
             String endCol = positionConverterToString(end.getColumn());
             for (Session sess : sessions.get(command.getGameID())) {
                 sendMessage(sess, new LoadGameMessage(game));
+                gameStatus(sess, game);
                 if (!sess.equals(session)) {
                     sendMessage(sess, new NotificationMessage(username + " made a move from " + startCol + startRow + " to " + endCol + endRow));
                 }
@@ -207,6 +208,28 @@ public class WebSocketHandler {
     public static String positionConverterToString(int pos){
         String[] headers = { "a", "b", "c", "d", "e",  "f", "g", "h" };
         return headers[pos - 1];
+    }
+
+    private void gameStatus(Session session, GameData game) throws Exception{
+        ChessGame chessGame = game.game();
+        if(chessGame.isInStalemate(ChessGame.TeamColor.WHITE) || chessGame.isInStalemate(ChessGame.TeamColor.BLACK)){
+            gameDAO.updateGame(game.gameID(), game.game(), true);
+            sendMessage(session, new NotificationMessage("game over due to stalemate"));
+        }
+        else if(chessGame.isInCheckmate(ChessGame.TeamColor.WHITE)){
+            gameDAO.updateGame(game.gameID(), game.game(), true);
+            sendMessage(session, new NotificationMessage("Checkmate, " + game.blackUsername() + " wins"));
+        }
+        else if(chessGame.isInCheckmate(ChessGame.TeamColor.BLACK)){
+            gameDAO.updateGame(game.gameID(), game.game(), true);
+            sendMessage(session, new NotificationMessage("Checkmate, " + game.whiteUsername() + " wins"));
+        }
+        else if(chessGame.isInCheck(ChessGame.TeamColor.WHITE)){
+            sendMessage(session, new NotificationMessage("white in check"));
+        }
+        else if(chessGame.isInCheck(ChessGame.TeamColor.BLACK)){
+            sendMessage(session, new NotificationMessage("black in check"));
+        }
     }
 
 
