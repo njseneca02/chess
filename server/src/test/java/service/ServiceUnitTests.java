@@ -275,7 +275,7 @@ public class ServiceUnitTests {
             CreateGameRequest request = new CreateGameRequest("gameName");
             gameService.createGame(request, authToken);
 
-            JoinGameRequest joinRequest = new JoinGameRequest("white", "1");
+            JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
             gameService.joinGame(joinRequest, authToken);
             game = gameDAO.getGame(1);
 
@@ -305,8 +305,8 @@ public class ServiceUnitTests {
             CreateGameRequest request = new CreateGameRequest("gameName");
             gameService.createGame(request, authToken);
 
-            JoinGameRequest joinRequest = new JoinGameRequest("white", "1");
-            JoinGameRequest joinRequest2 = new JoinGameRequest("white", "1");
+            JoinGameRequest joinRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
+            JoinGameRequest joinRequest2 = new JoinGameRequest(ChessGame.TeamColor.WHITE, "1");
             gameService.joinGame(joinRequest, authToken);
             gameService.joinGame(joinRequest2, authToken2);
             game = gameDAO.getGame(1);

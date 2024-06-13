@@ -153,6 +153,9 @@ public class ChessClient implements NotificationHandler{
         int rowPiece = Integer.parseInt(scanner.nextLine());
 
         ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
+        if(myGame.getBoard().getPiece(startPos) == null){
+            return " no piece there";
+        }
         drawTeamBoardHighlight(myGame, startPos);
         return "";
     }
@@ -190,6 +193,7 @@ public class ChessClient implements NotificationHandler{
     }
 
     public String login() throws ResponseException{
+        assertNotSignedIn();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "username: ");
         String username = scanner.nextLine();
@@ -208,6 +212,7 @@ public class ChessClient implements NotificationHandler{
     }
 
     public String register() throws ResponseException{
+        assertNotSignedIn();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "username: ");
         String username = scanner.nextLine();
@@ -228,6 +233,7 @@ public class ChessClient implements NotificationHandler{
 
     public String logout() throws ResponseException{
         assertSignedIn();
+        assertNotInGame();
         try{
             server.logout(authToken);
         }
@@ -241,6 +247,7 @@ public class ChessClient implements NotificationHandler{
 
     public String createGame() throws ResponseException{
         assertSignedIn();
+        assertNotInGame();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game name: ");
         String gameName = scanner.nextLine();
@@ -255,6 +262,7 @@ public class ChessClient implements NotificationHandler{
 
     public String listGames() throws ResponseException{
         assertSignedIn();
+        assertNotInGame();
         String result = "";
         try {
             Collection<GameData> games = server.listGames(authToken);
@@ -274,6 +282,7 @@ public class ChessClient implements NotificationHandler{
 
     public String joinGame() throws ResponseException{
         assertSignedIn();
+        assertNotInGame();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game number: ");
         String gameId = scanner.nextLine();
@@ -300,6 +309,7 @@ public class ChessClient implements NotificationHandler{
 
     public String observeGame() throws ResponseException{
         assertSignedIn();
+        assertNotInGame();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game number: ");
         String gameId = scanner.nextLine();
@@ -308,9 +318,11 @@ public class ChessClient implements NotificationHandler{
             server.joinGame(game, authToken, null);
         }
         catch(IOException e){
+            myGameID = game.gameID();
             inGame = true;
-            return "Observing game";
+            System.out.println(e.getMessage());
         }
+        myGameID = game.gameID();
         inGame = true;
         return "Observing game";
 
@@ -322,9 +334,21 @@ public class ChessClient implements NotificationHandler{
         }
     }
 
+    private void assertNotSignedIn() throws ResponseException {
+        if (state == State.SIGNEDIN) {
+            throw new ResponseException(400, "You must log out");
+        }
+    }
+
     private void assertInGame() throws ResponseException {
         if (!inGame) {
             throw new ResponseException(400, "You must be in a game");
+        }
+    }
+
+    private void assertNotInGame() throws ResponseException {
+        if (!inGame) {
+            throw new ResponseException(400, "You must leave your game first");
         }
     }
 
