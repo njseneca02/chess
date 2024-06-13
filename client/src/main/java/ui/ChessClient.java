@@ -117,13 +117,7 @@ public class ChessClient implements NotificationHandler{
         ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
         ChessMove move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
         if(myGame.getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN) {
-            if (myColor == ChessGame.TeamColor.WHITE && rowDestination == 8) {
-                try {
-                    move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
-                } catch (IOException e) {
-                    return e.getMessage();
-                }
-            } else if (myColor == ChessGame.TeamColor.BLACK && rowDestination == 1) {
+            if ((myColor == ChessGame.TeamColor.WHITE && rowDestination == 8) || (myColor == ChessGame.TeamColor.BLACK && rowDestination == 1)) {
                 try {
                     move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
                 } catch (IOException e) {
@@ -140,6 +134,7 @@ public class ChessClient implements NotificationHandler{
 
         return "";
     }
+
 
     public String highlightMoves() throws ResponseException{
         assertSignedIn();
@@ -415,19 +410,5 @@ public class ChessClient implements NotificationHandler{
         }
         return result;
     }
-
-//    private void updateMyGame() throws IOException{
-//        try {
-//            Collection<GameData> games = server.listGames(authToken);
-//            for(GameData game : games){
-//                if(game.gameID() == myGame.gameID()){
-//                    myGame = game;
-//                }
-//            }
-//        }
-//        catch(IOException e){
-//            throw new IOException(e.getMessage());
-//        }
-//    }
 
 }

@@ -19,7 +19,7 @@ public class ChessBoard {
     private static final String EMPTY = "   ";
     private static final String[] WHITE_HEADERS = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
     private static final String[] BLACK_HEADERS = {" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
-    private static final String[] headers = { "a", "b", "c", "d", "e",  "f", "g", "h" };
+    private static final String[] HEADERS = { "a", "b", "c", "d", "e",  "f", "g", "h" };
 
 
     public static void main(String[] args) {
@@ -34,8 +34,8 @@ public class ChessBoard {
     }
 
     public static int positionConverterToInt(String pos){
-        for(int i = 0; i < headers.length; i++){
-            if(headers[i].equals(pos)){
+        for(int i = 0; i < HEADERS.length; i++){
+            if(HEADERS[i].equals(pos)){
                 return i + 1;
             }
         }
@@ -178,31 +178,11 @@ public class ChessBoard {
                             break;
                         }
                     }
-
-                    if (boardCol % 2 == 1) {
-                        setWhite(out);
-                        if (isPositionInCollection) {
-                            setYellow(out);
-                        }
-                    } else {
-                        setBlue(out);
-                        if (isPositionInCollection) {
-                            setBrightYellow(out);
-                        }
-                    }
-
-                    printPieceConverter(out, row[boardCol]);
+                    rowHelperHighlight(out, boardCol, isPositionInCollection, row, 1);
                 }
             }
             else{
-                for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-                        if (boardCol % 2 == 1) {
-                            setWhite(out);
-                        } else {
-                            setBlue(out);
-                    }
-                    printPieceConverter(out, row[boardCol]);
-                }
+                rowHelper(out, row, 1);
             }
         }
 
@@ -217,31 +197,11 @@ public class ChessBoard {
                         break;
                     }
                 }
-
-                if (boardCol % 2 == 0) {
-                    setWhite(out);
-                    if (isPositionInCollection) {
-                        setYellow(out);
-                    }
-                } else {
-                    setBlue(out);
-                    if (isPositionInCollection) {
-                        setBrightYellow(out);
-                    }
-                }
-
-                printPieceConverter(out, row[boardCol]);
+                rowHelperHighlight(out, boardCol, isPositionInCollection, row, 0);
             }
         }
         else{
-            for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
-                if (boardCol % 2 == 0) {
-                    setWhite(out);
-                } else {
-                    setBlue(out);
-                }
-                printPieceConverter(out, row[boardCol]);
-            }
+            rowHelper(out, row, 0);
         }
     }
 
@@ -305,5 +265,33 @@ public class ChessBoard {
         }
         return result;
     }
+
+    private static void rowHelperHighlight(PrintStream out, int boardCol, boolean isPositionInCollection, ChessPiece[] row, int remainder){
+        if (boardCol % 2 == remainder) {
+            setWhite(out);
+            if (isPositionInCollection) {
+                setYellow(out);
+            }
+        } else {
+            setBlue(out);
+            if (isPositionInCollection) {
+                setBrightYellow(out);
+            }
+        }
+
+        printPieceConverter(out, row[boardCol]);
+    }
+
+    private static void rowHelper(PrintStream out, ChessPiece[] row, int remainder){
+        for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
+            if (boardCol % 2 == remainder) {
+                setWhite(out);
+            } else {
+                setBlue(out);
+            }
+            printPieceConverter(out, row[boardCol]);
+        }
+    }
+
 
 }
