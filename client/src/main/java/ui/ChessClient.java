@@ -94,7 +94,7 @@ public class ChessClient implements NotificationHandler{
     public String redraw() throws ResponseException{
         assertSignedIn();
         assertInGame();
-        drawTeamBoard(localBoard.getChessBoard());
+        drawTeamBoard(myGame);
         return "";
     }
 
@@ -345,7 +345,7 @@ public class ChessClient implements NotificationHandler{
 
     private void loadGameNotify(LoadGameMessage message){
         System.out.println();
-        drawTeamBoard(message.getGame().getBoard().getChessBoard());
+        drawTeamBoard(message.getGame());
         myGame = message.getGame();
         localBoard = message.getGame().getBoard();
     }
@@ -359,12 +359,12 @@ public class ChessClient implements NotificationHandler{
         }
     }
 
-    private void drawTeamBoard(ChessPiece[][] board){
+    private void drawTeamBoard(ChessGame game){
         if(myColor == ChessGame.TeamColor.WHITE || myColor == null){
-            ChessBoard.drawWhiteBoard(board);
+            ChessBoard.drawWhiteBoard(game);
         }
         else{
-            ChessBoard.drawBlackBoard(board);
+            ChessBoard.drawBlackBoard(game);
         }
     }
 

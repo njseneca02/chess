@@ -70,7 +70,7 @@ public class GameService {
         NoBodyResult result;
         AuthData auth = authDAO.getAuth(authToken);
 
-        if(request.gameID() == null){
+        if(request.gameID() == null || (request.playerColor() == null)){
             result = new NoBodyResult("Error: bad request");
         }
 
