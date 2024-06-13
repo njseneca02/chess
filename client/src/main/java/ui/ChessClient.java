@@ -54,7 +54,7 @@ public class ChessClient implements NotificationHandler{
                 case "leave" -> leave();
                 case "mm" -> makeMove();
                 case "resign" -> resign();
-//                case "highlight" -> highlightMoves();
+                case "highlight" -> highlightMoves();
                 case "quit" -> "quit";
                 default -> help();
             };
@@ -141,7 +141,7 @@ public class ChessClient implements NotificationHandler{
         return "";
     }
 
-    public String highlight() throws ResponseException{
+    public String highlightMoves() throws ResponseException{
         assertSignedIn();
         assertInGame();
 
@@ -153,7 +153,7 @@ public class ChessClient implements NotificationHandler{
         int rowPiece = Integer.parseInt(scanner.nextLine());
 
         ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
-        //drawTeamBoardHighlight(localBoard.getChessBoard(), ChessPosition position)
+        drawTeamBoardHighlight(myGame, startPos);
         return "";
     }
 
@@ -297,7 +297,7 @@ public class ChessClient implements NotificationHandler{
         return "joined Game";
 
     }
-    //try to figure out why this one doesn't make it to its return statement but the joingame does
+
     public String observeGame() throws ResponseException{
         assertSignedIn();
         Scanner scanner = new Scanner(System.in);
@@ -308,7 +308,8 @@ public class ChessClient implements NotificationHandler{
             server.joinGame(game, authToken, null);
         }
         catch(IOException e){
-            return e.getMessage();
+            inGame = true;
+            return "Observing game";
         }
         inGame = true;
         return "Observing game";
@@ -351,7 +352,6 @@ public class ChessClient implements NotificationHandler{
     }
 
     public void notify(ServerMessage serverMessage){
-//switch case to handle each server message and take care of code aqccordingly
         switch(serverMessage.getServerMessageType()){
             case ERROR -> errorNotify((ErrorMessage) serverMessage);
             case NOTIFICATION -> notificationNotify((NotificationMessage) serverMessage);
@@ -365,6 +365,15 @@ public class ChessClient implements NotificationHandler{
         }
         else{
             ChessBoard.drawBlackBoard(game);
+        }
+    }
+
+    private void drawTeamBoardHighlight(ChessGame game, ChessPosition piece){
+        if(myColor == ChessGame.TeamColor.WHITE || myColor == null){
+            ChessBoard.drawWhiteBoardHighlight(game, piece);
+        }
+        else{
+            ChessBoard.drawBlackBoardHighlight(game, piece);
         }
     }
 

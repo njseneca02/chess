@@ -76,8 +76,10 @@ public class WebSocketHandler {
                         sendMessage(sess, new NotificationMessage(username + " joined as observer"));
                     } else {
                         if (command.getColor() == ChessGame.TeamColor.WHITE) {
+                            gameDAO.updatePlayer(command.getGameID(), username, ChessGame.TeamColor.WHITE);
                             sendMessage(sess, new NotificationMessage(username + " joined as white player"));
                         } else {
+                            gameDAO.updatePlayer(command.getGameID(), username, ChessGame.TeamColor.BLACK);
                             sendMessage(sess, new NotificationMessage(username + " joined as black player"));
                         }
                     }

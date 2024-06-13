@@ -70,21 +70,29 @@ public class GameService {
         NoBodyResult result;
         AuthData auth = authDAO.getAuth(authToken);
 
-        if(request.gameID() == null || (request.playerColor() == null)){
+        if(request.gameID() == null || (request.playerColor() != null && !(request.playerColor().equalsIgnoreCase("white") || request.playerColor().equalsIgnoreCase("black")))){
             result = new NoBodyResult("Error: bad request");
         }
 
         else if(auth != null){
             GameData game = gameDAO.getGame(Integer.parseInt(request.gameID()));
             if(game != null){
-                if(request.playerColor() == ChessGame.TeamColor.BLACK && game.blackUsername() != null) {
+                if(request.playerColor() == null){
+                    result = new NoBodyResult("Error: bad request");
+                }
+                else if(request.playerColor().equalsIgnoreCase("black") && game.blackUsername() != null) {
                         result = new NoBodyResult("Error: already taken");
                 }
-                else if(request.playerColor() == ChessGame.TeamColor.WHITE && game.whiteUsername() != null){
+                else if(request.playerColor().equalsIgnoreCase("white") && game.whiteUsername() != null){
                         result = new NoBodyResult("Error: already taken");
                 }
                 else{
-                    gameDAO.updatePlayer(Integer.parseInt(request.gameID()), authDAO.getAuth(authToken).username(), request.playerColor());
+                    if(request.playerColor().equalsIgnoreCase("white")){
+                        gameDAO.updatePlayer(Integer.parseInt(request.gameID()), authDAO.getAuth(authToken).username(), ChessGame.TeamColor.WHITE);
+                    }
+                    else if(request.playerColor().equalsIgnoreCase("black")){
+                        gameDAO.updatePlayer(Integer.parseInt(request.gameID()), authDAO.getAuth(authToken).username(), ChessGame.TeamColor.BLACK);
+                    }
                     result = new NoBodyResult(null);
                 }
             }
