@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.ResponseException;
@@ -50,7 +51,7 @@ public class ChessClient implements NotificationHandler{
                 case "logout" -> logout();
                 case "redraw" -> redraw();
                 case "leave" -> leave();
-//                case "mm" -> makeMove();
+                case "mm" -> makeMove();
 //                case "resign" -> resign();
 //                case "highlight" -> highlightMoves();
                 case "quit" -> "quit";
@@ -82,6 +83,33 @@ public class ChessClient implements NotificationHandler{
         assertInGame();
         drawTeamBoard(localBoard.getChessBoard());
         return "";
+    }
+
+    public String makeMove() throws ResponseException{
+        assertSignedIn();
+        assertInGame();
+
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
+        int colPiece = ChessBoard.positionConverterToInt(scanner.nextLine());
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
+        int rowPiece = Integer.parseInt(scanner.nextLine());
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target destination (enter letter, then number");
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
+        int colDestination = ChessBoard.positionConverterToInt(scanner.nextLine());
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
+        int rowDestination = Integer.parseInt(scanner.nextLine());
+
+        ChessMove move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
+
+        try {
+            server.makeMove(authToken, myGame.gameID(), move);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        return "success";
     }
 
     public String highlight() throws ResponseException{

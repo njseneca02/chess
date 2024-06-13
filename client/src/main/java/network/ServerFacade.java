@@ -1,6 +1,7 @@
 package network;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.GameData;
@@ -9,6 +10,7 @@ import network.result.*;
 import ui.ChessClient;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveGameCommand;
+import websocket.commands.MakeMoveCommand;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -150,7 +152,11 @@ public class ServerFacade {
         websocketCommunicator.send(gson.toJson(command));
     }
 
-
+    public void makeMove(String authToken, int gameID, ChessMove move) throws IOException{
+        Gson gson = new Gson();
+        MakeMoveCommand command = new MakeMoveCommand(authToken, gameID, move);
+        websocketCommunicator.send(gson.toJson(command));
+    }
 
     //need to add something for making a move
 

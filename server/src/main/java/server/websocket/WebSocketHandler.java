@@ -1,7 +1,9 @@
 package server.websocket;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
@@ -88,31 +90,45 @@ public class WebSocketHandler {
     private void makeMove(Session session, String username, MakeMoveCommand command) throws Exception{
         boolean verifiedMove = false;
         GameData game = gameDAO.getGame(command.getGameID());
-
         Collection<ChessMove> validMoves = game.game().validMoves(command.getMove().getStartPosition());
-        for(ChessMove move : validMoves){
-            if (move.equals(command.getMove())) {
-                verifiedMove = true;
-                break;
-            }
+        if(game.whiteUsername() == null || game.blackUsername() == null){
+            sendMessage(session, new ErrorMessage("Error: wait for an opponent"));
         }
-        if(!(game.blackUsername().equals(username) || game.whiteUsername().equals(username))){
-            sendMessage(session, new ErrorMessage("Error: can't make move as observer"));
+        else if(game.game().getBoard().getPiece(command.getMove().getStartPosition()) == null){
+            sendMessage(session, new ErrorMessage("Error: no piece there"));
         }
-        else if(game.whiteUsername().equals(username)){
-            if(game.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor() == ChessGame.TeamColor.BLACK){
-                sendMessage(session, new ErrorMessage("Error: wrong team"));
-            }
-            else{
-                processValidMove(session, game, command, verifiedMove, username);
-            }
+        else if(validMoves == null || validMoves.isEmpty()){
+            sendMessage(session, new ErrorMessage("Error: no valid moves"));
         }
-        else{
-            if(game.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor() == ChessGame.TeamColor.WHITE){
-                sendMessage(session, new ErrorMessage("Error: wrong team"));
+        else {
+            for (ChessMove move : validMoves) {
+                if (move.equals(command.getMove())) {
+                    verifiedMove = true;
+                    break;
+                }
             }
-            else {
-                processValidMove(session, game, command, verifiedMove, username);
+            if (!(game.blackUsername().equals(username) || game.whiteUsername().equals(username))) {
+                sendMessage(session, new ErrorMessage("Error: can't make move as observer"));
+            } else if (game.whiteUsername().equals(username)) {
+                if (game.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor().equals(ChessGame.TeamColor.BLACK)) {
+                    sendMessage(session, new ErrorMessage("Error: not your piece"));
+                }
+                else if(game.game().getTeamTurn() != ChessGame.TeamColor.WHITE){
+                    sendMessage(session, new ErrorMessage("Error: not your turn"));
+                }
+                else {
+                    processValidMove(session, game, command, verifiedMove, username);
+                }
+            } else {
+                if (game.game().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor().equals(ChessGame.TeamColor.WHITE)) {
+                    sendMessage(session, new ErrorMessage("Error: not your piece"));
+                }
+                else if(game.game().getTeamTurn() != ChessGame.TeamColor.BLACK){
+                    sendMessage(session, new ErrorMessage("Error: not your turn"));
+                }
+                else {
+                    processValidMove(session, game, command, verifiedMove, username);
+                }
             }
         }
     }
@@ -171,15 +187,26 @@ public class WebSocketHandler {
         else if (verifiedMove) {
             game.game().makeMove(command.getMove());
             gameDAO.updateGame(command.getGameID(), game.game(), game.gameComplete());
+            ChessPosition start = command.getMove().getStartPosition();
+            ChessPosition end = command.getMove().getEndPosition();
+            String startRow = String.valueOf(start.getRow());
+            String startCol = positionConverterToString(start.getColumn());
+            String endRow = String.valueOf(end.getRow());
+            String endCol = positionConverterToString(end.getColumn());
             for (Session sess : sessions.get(command.getGameID())) {
                 sendMessage(sess, new LoadGameMessage(game));
                 if (!sess.equals(session)) {
-                    sendMessage(sess, new NotificationMessage(username + "made a move"));
+                    sendMessage(sess, new NotificationMessage(username + " made a move from " + startCol + startRow + " to " + endCol + endRow));
                 }
             }
         } else {
             sendMessage(session, new ErrorMessage("Error: invalid move"));
         }
+    }
+
+    public static String positionConverterToString(int pos){
+        String[] headers = { "a", "b", "c", "d", "e",  "f", "g", "h" };
+        return headers[pos - 1];
     }
 
 

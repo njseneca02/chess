@@ -15,6 +15,7 @@ public class ChessBoard {
     private static final String EMPTY = "   ";
     private static final String[] WHITE_HEADERS = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h " };
     private static final String[] BLACK_HEADERS = {" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
+    private static final String[] headers = { "a", "b", "c", "d", "e",  "f", "g", "h" };
 
 
     public static void main(String[] args) {
@@ -26,6 +27,15 @@ public class ChessBoard {
 
         drawWhiteBoard(out, startingBoard);
         drawBlackBoard(out, reverseBoard(startingBoard));
+    }
+
+    public static int positionConverterToInt(String pos){
+        for(int i = 0; i < headers.length; i++){
+            if(headers[i].equals(pos)){
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     public static void drawWhiteBoard(ChessPiece[][] chessBoard){
