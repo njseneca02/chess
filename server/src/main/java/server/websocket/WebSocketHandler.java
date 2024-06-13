@@ -76,7 +76,7 @@ public class WebSocketHandler {
                         if (command.getColor() == ChessGame.TeamColor.WHITE) {
                             sendMessage(sess, new NotificationMessage(username + " joined as white player"));
                         } else {
-                            sendMessage(sess, new NotificationMessage(username + "joined as black player"));
+                            sendMessage(sess, new NotificationMessage(username + " joined as black player"));
                         }
                     }
                 }

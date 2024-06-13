@@ -1,5 +1,8 @@
 package ui;
 
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import exception.ResponseException;
 import model.GameData;
 import network.ServerFacade;
@@ -19,8 +22,12 @@ public class ChessClient implements NotificationHandler{
     private String visitorName = null;
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
+    private boolean inGame = false;
+    private ChessGame.TeamColor myColor = null;
     private String authToken;
     private HashMap<Integer, GameData> listOfGames = new HashMap<>();
+    private chess.ChessBoard localBoard;
+    private GameData myGame = null;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(this, serverUrl);
@@ -41,12 +48,47 @@ public class ChessClient implements NotificationHandler{
                 case "join" -> joinGame();
                 case "observe" -> observeGame();
                 case "logout" -> logout();
+                case "redraw" -> redraw();
+                case "leave" -> leave();
+//                case "mm" -> makeMove();
+//                case "resign" -> resign();
+//                case "highlight" -> highlightMoves();
                 case "quit" -> "quit";
                 default -> help();
             };
         } catch (ResponseException ex) {
             return ex.getMessage();
         }
+    }
+
+    public String leave() throws ResponseException{
+        assertSignedIn();
+        assertInGame();
+        try {
+            server.leaveGame(myGame , authToken);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        myColor = null;
+        inGame = false;
+        myGame = null;
+        return "Left the game";
+
+    }
+
+    public String redraw() throws ResponseException{
+        assertSignedIn();
+        assertInGame();
+        drawTeamBoard(localBoard.getChessBoard());
+        return "";
+    }
+
+    public String highlight() throws ResponseException{
+        assertSignedIn();
+        assertInGame();
+        //drawTeamBoardHighlight(localBoard.getChessBoard(), ChessPosition position)
+        return "";
     }
 
     public String help(){
@@ -58,7 +100,7 @@ public class ChessClient implements NotificationHandler{
                    - help (displays extra text for each command)
                    """;
         }
-        else{
+        else if(!inGame){
             return """
                    - create (makes a new game after providing input)
                    - list (lists all games that currently exist)
@@ -66,6 +108,16 @@ public class ChessClient implements NotificationHandler{
                    - observe (join a game as a spectator after specifying game id)
                    - logout (signs out the user)
                    - quit (ends the program)
+                   - help (displays extra text for each command)
+                   """;
+        }
+        else{
+            return """
+                   - redraw (redraws the chessboard)
+                   - leave (removes player from game)
+                   - mm (make move after specifying piece and destination)
+                   - resign (forfeits the game)
+                   - highlight (highlights possible moves of specified piece))
                    - help (displays extra text for each command)
                    """;
         }
@@ -168,26 +220,45 @@ public class ChessClient implements NotificationHandler{
         catch(IOException e){
             return e.getMessage();
         }
-        ChessBoard.drawBoards(game.game().getBoard().getChessBoard());
-        return "Success!";
+        if(teamColor.equals("white")){
+            myColor = ChessGame.TeamColor.WHITE;
+        }
+        else{
+            myColor = ChessGame.TeamColor.BLACK;
+        }
+        myGame = game;
+        inGame = true;
+        return "joined Game";
 
     }
-
+    //try to figure out why this one doesn't make it to its return statement but the joingame does
     public String observeGame() throws ResponseException{
         assertSignedIn();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter game number: ");
         String gameId = scanner.nextLine();
         GameData game = listOfGames.get(Integer.parseInt(gameId));
-
-        ChessBoard.drawBoards(game.game().getBoard().getChessBoard());
-        return "Success!";
+        try {
+            server.joinGame(game, authToken, null);
+        }
+        catch(IOException e){
+            return e.getMessage();
+        }
+        myGame = game;
+        inGame = true;
+        return "Observing game";
 
     }
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {
             throw new ResponseException(400, "You must log in");
+        }
+    }
+
+    private void assertInGame() throws ResponseException {
+        if (!inGame) {
+            throw new ResponseException(400, "You must be in a game");
         }
     }
 
@@ -202,15 +273,17 @@ public class ChessClient implements NotificationHandler{
     //add code for the post game ui and then correlating calls to serverfacade (join game, make move, highlight moves,
 
     private void errorNotify(ErrorMessage message){
-        System.out.println(SET_TEXT_COLOR_RED + message.getMessage());
+        System.out.println("\n" + SET_TEXT_COLOR_RED + message.getMessage());
     }
 
     private void notificationNotify(NotificationMessage message){
-        System.out.println(SET_TEXT_COLOR_GREEN + message.getMessage());
+        System.out.println("\n" + SET_TEXT_COLOR_GREEN + message.getMessage());
     }
 
     private void loadGameNotify(LoadGameMessage message){
-        ChessBoard.drawBoards(message.getGame().getBoard().getChessBoard());
+        System.out.println();
+        drawTeamBoard(message.getGame().getBoard().getChessBoard());
+        localBoard = message.getGame().getBoard();
     }
 
     public void notify(ServerMessage serverMessage){
@@ -219,6 +292,15 @@ public class ChessClient implements NotificationHandler{
             case ERROR -> errorNotify((ErrorMessage) serverMessage);
             case NOTIFICATION -> notificationNotify((NotificationMessage) serverMessage);
             case LOAD_GAME -> loadGameNotify((LoadGameMessage) serverMessage);
+        }
+    }
+
+    private void drawTeamBoard(ChessPiece[][] board){
+        if(myColor == ChessGame.TeamColor.WHITE || myColor == null){
+            ChessBoard.drawWhiteBoard(board);
+        }
+        else{
+            ChessBoard.drawBlackBoard(board);
         }
     }
 

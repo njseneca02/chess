@@ -50,6 +50,7 @@ public class WebsocketCommunicator extends Endpoint {
         this.session.getBasicRemote().sendText(msg);
     }
 
+    @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 }

@@ -28,9 +28,13 @@ public class ChessBoard {
         drawBlackBoard(out, reverseBoard(startingBoard));
     }
 
-    public static void drawBoards(ChessPiece[][] chessBoard){
+    public static void drawWhiteBoard(ChessPiece[][] chessBoard){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         drawWhiteBoard(out, chessBoard);
+    }
+
+    public static void drawBlackBoard(ChessPiece[][] chessBoard){
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         drawBlackBoard(out, reverseBoard(chessBoard));
     }
 
