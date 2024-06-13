@@ -27,7 +27,6 @@ public class ChessClient implements NotificationHandler{
     private ChessGame.TeamColor myColor = null;
     private String authToken;
     private HashMap<Integer, GameData> listOfGames = new HashMap<>();
-    private chess.ChessBoard localBoard;
     private ChessGame myGame = null;
     private int myGameID;
 
@@ -342,7 +341,7 @@ public class ChessClient implements NotificationHandler{
     }
 
     private void assertNotInGame() throws ResponseException {
-        if (!inGame) {
+        if (inGame) {
             throw new ResponseException(400, "You must leave your game first");
         }
     }
@@ -367,7 +366,6 @@ public class ChessClient implements NotificationHandler{
         System.out.println();
         drawTeamBoard(message.getGame());
         myGame = message.getGame();
-        localBoard = message.getGame().getBoard();
     }
 
     public void notify(ServerMessage serverMessage){
