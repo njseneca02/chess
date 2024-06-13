@@ -98,7 +98,7 @@ public class WebSocketHandler {
             sendMessage(session, new ErrorMessage("Error: no piece there"));
         }
         else if(validMoves == null || validMoves.isEmpty()){
-            sendMessage(session, new ErrorMessage("Error: no valid moves"));
+            sendMessage(session, new ErrorMessage("Error: not valid move"));
         }
         else {
             for (ChessMove move : validMoves) {

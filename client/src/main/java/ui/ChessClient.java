@@ -113,20 +113,53 @@ public class ChessClient implements NotificationHandler{
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
         int rowDestination = Integer.parseInt(scanner.nextLine());
 
-        ChessMove move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
-
+        ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
+        ChessMove move;
+        if(myGame.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN){
+            if(myGame.blackUsername().equals(getUsername()) && rowDestination == 1){
+                try {
+                    move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
+                }
+                catch(IOException e){
+                    return e.getMessage();
+                }
+            }
+            else if(myGame.whiteUsername().equals(getUsername()) && rowDestination == 8){
+                try {
+                    move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
+                }
+                catch(IOException e){
+                    return e.getMessage();
+                }
+            }
+            else{
+                move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
+            }
+        }
+        else{
+            move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
+        }
         try {
             server.makeMove(authToken, myGame.gameID(), move);
         }
         catch(IOException e){
             return e.getMessage();
         }
-        return "success";
+        return "";
     }
 
     public String highlight() throws ResponseException{
         assertSignedIn();
         assertInGame();
+
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
+        int colPiece = ChessBoard.positionConverterToInt(scanner.nextLine());
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
+        int rowPiece = Integer.parseInt(scanner.nextLine());
+
+        ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
         //drawTeamBoardHighlight(localBoard.getChessBoard(), ChessPosition position)
         return "";
     }
@@ -157,7 +190,7 @@ public class ChessClient implements NotificationHandler{
                    - leave (removes player from game)
                    - mm (make move after specifying piece and destination)
                    - resign (forfeits the game)
-                   - highlight (highlights possible moves of specified piece))
+                   - highlight (highlights possible moves of specified piece)
                    - help (displays extra text for each command)
                    """;
         }
@@ -310,8 +343,6 @@ public class ChessClient implements NotificationHandler{
         return visitorName;
     }
 
-    //add code for the post game ui and then correlating calls to serverfacade (join game, make move, highlight moves,
-
     private void errorNotify(ErrorMessage message){
         System.out.println("\n" + SET_TEXT_COLOR_RED + message.getMessage());
     }
@@ -342,6 +373,21 @@ public class ChessClient implements NotificationHandler{
         else{
             ChessBoard.drawBlackBoard(board);
         }
+    }
+
+    private ChessPiece.PieceType askForType() throws IOException{
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "enter promotion piece (q, r, b, n):");
+        String piece = scanner.nextLine();
+        ChessPiece.PieceType result;
+        switch(piece){
+            case "q" -> result = ChessPiece.PieceType.QUEEN;
+            case "r" -> result = ChessPiece.PieceType.ROOK;
+            case "b" -> result = ChessPiece.PieceType.BISHOP;
+            case "n" -> result = ChessPiece.PieceType.KNIGHT;
+            default -> throw new IOException("not a valid promotion piece");
+        }
+        return result;
     }
 
 }
