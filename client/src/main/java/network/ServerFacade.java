@@ -147,9 +147,9 @@ public class ServerFacade {
         }
     }
 
-    public void leaveGame(GameData game, String authToken) throws IOException{
+    public void leaveGame(int gameID, String authToken) throws IOException{
         Gson gson = new Gson();
-        LeaveGameCommand command = new LeaveGameCommand(authToken, game.gameID());
+        LeaveGameCommand command = new LeaveGameCommand(authToken, gameID);
         websocketCommunicator.send(gson.toJson(command));
     }
 

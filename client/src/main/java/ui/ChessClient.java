@@ -28,7 +28,8 @@ public class ChessClient implements NotificationHandler{
     private String authToken;
     private HashMap<Integer, GameData> listOfGames = new HashMap<>();
     private chess.ChessBoard localBoard;
-    private GameData myGame = null;
+    private ChessGame myGame = null;
+    private int myGameID;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(this, serverUrl);
@@ -66,7 +67,7 @@ public class ChessClient implements NotificationHandler{
         assertSignedIn();
         assertInGame();
         try {
-            server.resign(authToken, myGame.gameID());
+            server.resign(authToken, myGameID);
         }
         catch(IOException e){
             return e.getMessage();
@@ -78,7 +79,7 @@ public class ChessClient implements NotificationHandler{
         assertSignedIn();
         assertInGame();
         try {
-            server.leaveGame(myGame , authToken);
+            server.leaveGame(myGameID , authToken);
         }
         catch(IOException e){
             return e.getMessage();
@@ -101,50 +102,42 @@ public class ChessClient implements NotificationHandler{
         assertSignedIn();
         assertInGame();
 
-        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number");
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number)");
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
         int colPiece = ChessBoard.positionConverterToInt(scanner.nextLine());
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
         int rowPiece = Integer.parseInt(scanner.nextLine());
-        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target destination (enter letter, then number");
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target destination (enter letter, then number)");
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
         int colDestination = ChessBoard.positionConverterToInt(scanner.nextLine());
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "number: ");
         int rowDestination = Integer.parseInt(scanner.nextLine());
 
         ChessPosition startPos = new ChessPosition(rowPiece, colPiece);
-        ChessMove move;
-        if(myGame.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN){
-            if(myGame.blackUsername().equals(getUsername()) && rowDestination == 1){
+        ChessMove move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
+        if(myGame.getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN) {
+            if (myColor == ChessGame.TeamColor.WHITE && rowDestination == 8) {
                 try {
                     move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
+                } catch (IOException e) {
+                    return e.getMessage();
                 }
-                catch(IOException e){
+            } else if (myColor == ChessGame.TeamColor.BLACK && rowDestination == 1) {
+                try {
+                    move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
+                } catch (IOException e) {
                     return e.getMessage();
                 }
             }
-            else if(myGame.whiteUsername().equals(getUsername()) && rowDestination == 8){
-                try {
-                    move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), askForType());
-                }
-                catch(IOException e){
-                    return e.getMessage();
-                }
-            }
-            else{
-                move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
-            }
-        }
-        else{
-            move = new ChessMove(new ChessPosition(rowPiece, colPiece), new ChessPosition(rowDestination, colDestination), null);
         }
         try {
-            server.makeMove(authToken, myGame.gameID(), move);
+            server.makeMove(authToken, myGameID, move);
         }
         catch(IOException e){
             return e.getMessage();
         }
+
         return "";
     }
 
@@ -152,7 +145,7 @@ public class ChessClient implements NotificationHandler{
         assertSignedIn();
         assertInGame();
 
-        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number");
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "target piece (enter letter, then number)");
         Scanner scanner = new Scanner(System.in);
         System.out.print("\n" + SET_TEXT_COLOR_GREEN +  "letter: ");
         int colPiece = ChessBoard.positionConverterToInt(scanner.nextLine());
@@ -299,7 +292,7 @@ public class ChessClient implements NotificationHandler{
         else{
             myColor = ChessGame.TeamColor.BLACK;
         }
-        myGame = game;
+        myGameID = game.gameID();
         inGame = true;
         return "joined Game";
 
@@ -317,7 +310,6 @@ public class ChessClient implements NotificationHandler{
         catch(IOException e){
             return e.getMessage();
         }
-        myGame = game;
         inGame = true;
         return "Observing game";
 
@@ -354,6 +346,7 @@ public class ChessClient implements NotificationHandler{
     private void loadGameNotify(LoadGameMessage message){
         System.out.println();
         drawTeamBoard(message.getGame().getBoard().getChessBoard());
+        myGame = message.getGame();
         localBoard = message.getGame().getBoard();
     }
 
@@ -389,5 +382,19 @@ public class ChessClient implements NotificationHandler{
         }
         return result;
     }
+
+//    private void updateMyGame() throws IOException{
+//        try {
+//            Collection<GameData> games = server.listGames(authToken);
+//            for(GameData game : games){
+//                if(game.gameID() == myGame.gameID()){
+//                    myGame = game;
+//                }
+//            }
+//        }
+//        catch(IOException e){
+//            throw new IOException(e.getMessage());
+//        }
+//    }
 
 }
