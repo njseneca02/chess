@@ -65,11 +65,15 @@ public class ChessClient implements NotificationHandler{
     public String resign() throws ResponseException{
         assertSignedIn();
         assertInGame();
-        try {
-            server.resign(authToken, myGameID);
-        }
-        catch(IOException e){
-            return e.getMessage();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\n" + SET_TEXT_COLOR_GREEN +  " confirm resign (y or n)");
+        String confirm = scanner.nextLine();
+        if(confirm.equals("y")) {
+            try {
+                server.resign(authToken, myGameID);
+            } catch (IOException e) {
+                return e.getMessage();
+            }
         }
         return "";
     }
