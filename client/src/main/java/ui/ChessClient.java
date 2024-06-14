@@ -361,11 +361,12 @@ public class ChessClient implements NotificationHandler{
     private void notificationNotify(NotificationMessage message){
         System.out.println("\n" + SET_TEXT_COLOR_GREEN + message.getMessage());
     }
-
+private int counter = 0;
     private void loadGameNotify(LoadGameMessage message){
+        counter++;
         System.out.println();
-        drawTeamBoard(message.getGame());
         myGame = message.getGame();
+        drawTeamBoard(myGame);
     }
 
     public void notify(ServerMessage serverMessage){

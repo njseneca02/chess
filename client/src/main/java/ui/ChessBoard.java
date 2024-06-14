@@ -114,7 +114,7 @@ public class ChessBoard {
         if(team.equals("black") && targetPiece != null){
             rowId = 1;
             chessBoard = reverseBoard(chessBoard);
-            finalPosition = new ChessPosition(targetPiece.getRow(), targetPiece.getColumn());
+            finalPosition = new ChessPosition(targetPiece.getRow(), 9 - targetPiece.getColumn());
         }
         else if(team.equals("white") && targetPiece != null){
             rowId = 8;
@@ -135,9 +135,18 @@ public class ChessBoard {
             positions = null;
         }
         else{
-            Collection<ChessMove> validMoves = chessGame.validMoves(finalPosition);
-            for(ChessMove move : validMoves){
-                positions.add(move.getEndPosition());
+            //does valid moves see the format of the board the same way that Writing the board does?
+            Collection<ChessMove> validMoves = chessGame.validMoves(targetPiece);
+            if(validMoves != null) {
+                for (ChessMove move : validMoves) {
+                    if(team.equals("white") || team == null){
+                        positions.add(new ChessPosition(9 - move.getEndPosition().getRow(), move.getEndPosition().getColumn()));
+                    }
+                    else if(team.equals("black")){
+                        positions.add(new ChessPosition(move.getEndPosition().getRow(), 9 - move.getEndPosition().getColumn()));
+                    }
+
+                }
             }
         }
 

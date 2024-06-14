@@ -165,6 +165,4 @@ public class ServerFacade {
         websocketCommunicator.send(gson.toJson(command));
     }
 
-    //need to add something for making a move
-
 }

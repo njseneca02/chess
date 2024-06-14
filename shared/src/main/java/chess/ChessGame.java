@@ -80,7 +80,6 @@ public class ChessGame {
             }
 
         }
-
         return validMoves;
     }
 
