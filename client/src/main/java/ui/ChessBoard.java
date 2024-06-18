@@ -22,16 +22,16 @@ public class ChessBoard {
     private static final String[] HEADERS = { "a", "b", "c", "d", "e",  "f", "g", "h" };
 
 
-    public static void main(String[] args) {
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.print(ERASE_SCREEN);
-        ChessGame game = new ChessGame();
-
-        drawWhiteBoard(game);
-        drawBlackBoard(game);
-        drawWhiteBoardHighlight(game, new ChessPosition(2,2));
-        drawBlackBoardHighlight(game, new ChessPosition(2,2));
-    }
+//    public static void main(String[] args) {
+//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        out.print(ERASE_SCREEN);
+//        ChessGame game = new ChessGame();
+//
+//        drawWhiteBoard(game);
+//        drawBlackBoard(game);
+//        drawWhiteBoardHighlight(game, new ChessPosition(2,2));
+//        drawBlackBoardHighlight(game, new ChessPosition(2,2));
+//    }
 
     public static int positionConverterToInt(String pos){
         for(int i = 0; i < HEADERS.length; i++){
